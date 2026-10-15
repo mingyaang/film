@@ -100,6 +100,10 @@
   .m-jumpcut .m{animation:cutA 3s linear infinite}
   .m-jumpcut .f{animation:cutB 3s linear infinite}
   .m-approach .f{animation:approach 5s ease-in-out infinite alternate}
+  @keyframes spin{from{transform:scale(1.6) rotate(0)}to{transform:scale(1.6) rotate(180deg)}} /* scale hides the corners */
+  .m-spin .s{animation:spin 6s ease-in-out infinite alternate}
+  .m-pan .b{--d:15%;animation:drift 8s ease-in-out infinite alternate}
+  .m-dutch .s{transform:rotate(-14deg) scale(1.3)}
 </style>
 </head>
 <body>
@@ -114,6 +118,9 @@
     <span><b>lock AE/AF</b> so exposure doesn't pump</span>
     <span><b>cut on motion</b>, roughly to the beat</span>
     <span><b>vlog bits:</b> 5–15 s, dropped between montage runs</span>
+    <span><b>Pocket 4 modes:</b> Follow = everyday · Tilt Locked = flat horizon · FPV = rolls with your hand</span>
+    <span><b>joystick pans</b> are smoother than turning your wrist</span>
+    <span><b>Pocket slow-mo:</b> 4K/240 = 10× at 24 · D-Log only if you'll color-grade</span>
   </div>
   <div id="sheet"></div>
 </div>
@@ -146,6 +153,23 @@ const SHEET = [
      how:'Camera near the ground. Let the crowd stream past the lens.', set:'0.5× wide · 1/25–1/50 for blur'},
     {n:'hyperlapse', mv:'hyper', sky:'#87b3e0,#f0d2b0', L:{b:[['#6d6a66',0,78,100,22]], m:[['🗼',50,48,40]]},
      how:'Pick a fixed point. One step, one photo, ~150 times, keeping the point centered.', set:'Hyperlapse mode or stabilize in post'},
+  ]],
+  ['🌆', 'skyscrapers & city', [
+    {n:'tower tilt-up', mv:'tilt', sky:'#4f86c6,#bcd6ef', L:{b:[['#5d5a57',0,82,100,18]], m:[['🏢',50,40,56]], f:[['🚶',30,86,10]]},
+     how:'Stand at the base. Start on the entrance or street, tilt up the facade to the sky. Slower than feels right.', set:'Follow mode · joystick up · 6–8 s'},
+    {n:'corner reveal', mv:'reveal', sky:'#7aa4d8,#d9c7ad', L:{b:[['#5d5a57',0,76,100,24]], m:[['🏙️',50,50,46]], f:[['#2a2622',0,0,100,100]]},
+     how:'Start tight on a wall, walk around the corner so the skyline or a big crossing opens up.', set:'Tilt Locked · walk slow'},
+    {n:'observation deck pan', mv:'pan', sky:'#1c2a55,#e98a5a',
+     L:{b:[['#141a30',-20,72,140,28],['🏢',-8,60,22],['🏙️',18,58,26],['🗼',45,50,30],['🏢',70,60,22],['🏙️',95,58,26],['🏢',115,60,22]]},
+     how:'Lens pressed to the glass, pan slowly across the skyline. Go at blue hour, ~20 min after sunset.', set:'dark cloth or hand on the glass · AE lock'},
+    {n:'crossing from above', mv:'timelapse', sky:'#4a4d52,#3a3d42',
+     L:{b:[['#e8e8e8',10,20,6,60],['#e8e8e8',26,20,6,60],['#e8e8e8',42,20,6,60],['#e8e8e8',58,20,6,60],['#e8e8e8',74,20,6,60],['#e8e8e8',90,20,6,60]],
+        m:[['🚶',20,35,10],['🚶‍♀️',45,55,10],['🚶',70,40,10],['🧍',35,70,10]]},
+     how:'From a café or deck above a busy crossing, lock off looking down. Roll through a full light cycle, or timelapse it.', set:'ledge or mini tripod · Timelapse mode'},
+    {n:'light trails', mv:'timelapse', sky:'#0b0f22,#1c1838', L:{b:[['🏙️',50,36,40],['#22252c',0,66,100,34]], m:[['🚗',20,74,10],['🚕',60,82,10],['🚗',85,74,10]]},
+     how:'Locked off above a busy road at night. A timelapse turns traffic into streams of light.', set:'tripod · Timelapse/Motionlapse'},
+    {n:'frame in a frame', mv:'still', sky:'#6a96d0,#d6e4f2', L:{b:[['🏢',50,50,40]], f:[['#1e1b18',0,0,32,100],['#1e1b18',68,0,32,100]]},
+     how:'Shoot the tower through a gap: an alley, under a bridge, between two buildings. Dark edges point at the subject.', set:'subject centered in the gap'},
   ]],
   ['🚄', 'trains & transit', [
     {n:'window parallax', mv:'window', sky:'#bcd7f0,#e6eef5',
@@ -204,6 +228,34 @@ const SHEET = [
      how:'First bite, first look at the view. Rack from the thing to their face, keep rolling past the moment.', set:'start early · hold 3 s after'},
     {n:'local at work', mv:'still', sky:'#2a1a10,#120b06', L:{b:[['🏮',78,30,16]], m:[['🧑‍🍳',40,56,36]], f:[['♨️',62,70,12]]},
      how:'Chef at the grill, vendor, station staff. Ask first, then a 3–5 s portrait while they work.', set:'1× or 2× · don’t push the lens in faces'},
+  ]],
+  ['📐', 'angles & what they say', [
+    {n:'eye level', mv:'still', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,70,100,30],['🏯',78,46,22]], f:[['🧍',45,58,34]]},
+     how:'Lens at eye height. Neutral and honest. The default for talking and portraits.', set:'feels: relatable'},
+    {n:'low angle', mv:'still', sky:'#4f86c6,#bcd6ef', L:{b:[['#5d5a57',0,90,100,10]], m:[['🏢',50,40,74]], f:[['🧍',72,74,26]]},
+     how:'Camera at knee height or on the ground, aimed up. Buildings and people look tall and strong.', set:'feels: scale, power · skyscrapers'},
+    {n:'high angle', mv:'still', sky:'#6d6a66,#5d5a57', L:{b:[['#7a7672',0,0,100,100]], m:[['🧍',50,64,8]]},
+     how:'Shoot down from stairs, a bridge or a deck. The subject looks small in a big place.', set:'feels: scale, solitude'},
+    {n:'bird’s-eye', mv:'still', sky:'#3e4148,#2c2f35', L:{m:[['☂️',22,30,16],['☂️',48,62,16],['☂️',74,32,16],['☂️',64,80,14],['☂️',30,78,14]]},
+     how:'Straight down. Turns crowds, umbrellas, crossings and food into patterns.', set:'feels: graphic, map-like'},
+    {n:'dutch tilt', mv:'dutch', sky:'#150b2c,#3a1747', L:{b:[['#0d1424',0,70,100,30]], m:[['🏮',30,36,16],['🏮',70,36,16]], f:[['🚶',50,66,26]]},
+     how:'Roll the frame 10–20°. Energy or unease, good for night streets and fast cuts. Use rarely.', set:'FPV mode lets the roll through'},
+    {n:'hip level', mv:'follow', sky:'#a9c8e6,#d9c7ad',
+     L:{b:[['#6d6a66',-20,80,240,20],['🏪',-10,42,34],['🏢',20,36,38],['🏪',50,42,34],['🏢',80,36,38],['🏪',110,42,34],['🏢',140,36,38]], m:[['🚶‍♀️',40,64,40]]},
+     how:'Hold the camera at your waist while walking. You are in the crowd, not filming it, so people act normal.', set:'Tilt Locked keeps the horizon flat'},
+  ]],
+  ['🎥', 'Pocket 4 gimbal moves', [
+    {n:'Tilt Locked glide', mv:'push', sky:'#150b2c,#2a1340', L:{b:[['#0d1424',0,64,100,36]], m:[['🏮',25,30,14],['🏮',75,30,14],['🏮',38,44,10],['🏮',62,44,10]]},
+     how:'Walk forward through an alley or shopping arcade at a steady pace. The horizon stays flat however you step.', set:'Tilt Locked · heel-to-toe · 60 fps'},
+    {n:'ground skim', mv:'push', sky:'#9ec5e8,#d9c7ad', L:{b:[['#5d5a57',0,46,100,54],['#e8e8e8',20,70,10,30],['#e8e8e8',45,70,10,30],['#e8e8e8',70,70,10,30]], m:[['🏙️',50,34,28]]},
+     how:'Camera a few cm above the pavement, gliding forward. Crossing stripes, tiles and puddles rush past.', set:'Tilt Locked · tilt up a touch'},
+    {n:'SpinShot sky-up', mv:'spin', sky:'#5a8fd0,#bcd6ef', L:{m:[['🏢',18,22,30],['🏢',82,22,30],['🏢',18,82,30],['🏢',82,82,30]]},
+     how:'Point straight up between tall buildings or at a station ceiling and let it rotate 90° or 180°. A strong city opener.', set:'SpinShot mode · stand still'},
+    {n:'ActiveTrack walk-by', mv:'orbit', sky:'#9ec5e8,#e8d6b8', L:{b:[['🏪',10,52,30],['🏢',50,48,34],['🏪',90,52,30]], m:[['🧍',50,62,30]]},
+     how:'Double-tap your companion to lock on, then walk past or around them. The gimbal keeps them centered while the city slides.', set:'ActiveTrack · double-tap subject'},
+    {n:'Motionlapse', mv:'pan', sky:'#2a2a5a,#f0a070',
+     L:{b:[['#1a1d33',-20,74,140,26],['🏢',-8,62,22],['🏙️',20,60,26],['🌇',48,56,28],['🏢',74,62,22],['🏙️',100,60,26]]},
+     how:'On a ledge or mini tripod, set a start and end point. The gimbal pans slowly while it timelapses. Sunset into night.', set:'Motionlapse · 20–30 min'},
   ]],
   ['✂️', 'transitions', [
     {n:'whip pan', mv:'whip', sky:'#1d2230,#2c3446', L:{m:[['#3b2416',0,0,100,100],['🍜',50,55,30]], f:[['#86a9d6',0,0,100,100],['🏯',50,52,36]]},
