@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>shot cheat sheet 🎬</title>
+<style>
+  :root{--plane:#0a0a0c;--surface:#16161b;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--ring:rgba(255,255,255,.10);--rec:#ff4d4d}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:radial-gradient(80rem 40rem at 15% -10%,#1b2a4a 0%,transparent 60%),
+               radial-gradient(60rem 35rem at 90% 0%,#3a1e14 0%,transparent 55%),var(--plane);
+    color:var(--ink);font:400 15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh
+  }
+  .wrap{max-width:1180px;margin:0 auto}
+  h1{font-size:clamp(30px,5.5vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.02}
+  h1 .grad{background:linear-gradient(92deg,#86b6ef,#d95926 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--ink-2);margin-top:8px}
+  .rules{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
+  .rules span{background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink-2)}
+  .rules b{color:var(--ink)}
+
+  section{margin-top:34px}
+  h2{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:12px}
+  h2 i{font-style:normal;font-size:20px;margin-right:6px;vertical-align:-2px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+  .tile{background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:10px 10px 14px}
+  .tile h3{font-size:16px;font-weight:700;margin:10px 4px 4px}
+  .tile p{font-size:13.5px;color:var(--ink-2);margin:0 4px}
+  .tile .set{display:inline-block;margin:8px 4px 0;font-size:12px;color:#86b6ef;background:rgba(134,182,239,.08);border-radius:8px;padding:3px 8px}
+
+  /* viewfinder: scene layers inside a clipped 16:9 frame; sizes in cqw so glyphs scale with the tile */
+  .vf{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:10px;container-type:inline-size}
+  .s,.L{position:absolute;inset:0}
+  .it{position:absolute;transform:translate(-50%,-50%);line-height:1}
+  .rect{position:absolute}
+  .flip{transform:translate(-50%,-50%) scaleY(-1);opacity:.45}
+  .sil{filter:brightness(0)}
+  .vf::before{ /* rule of thirds */
+    content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+    background:linear-gradient(90deg,transparent 33.2%,rgba(255,255,255,.18) 33.3% 33.5%,transparent 33.6% 66.5%,rgba(255,255,255,.18) 66.6% 66.8%,transparent 66.9%),
+               linear-gradient(transparent 33.2%,rgba(255,255,255,.18) 33.3% 33.6%,transparent 33.7% 66.4%,rgba(255,255,255,.18) 66.5% 66.8%,transparent 66.9%)
+  }
+  .tag{position:absolute;z-index:6;left:8px;top:7px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.08em;color:#fff;
+       background:rgba(0,0,0,.45);padding:4px 6px;border-radius:5px}
+  .tag::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rec);margin-right:5px;
+       vertical-align:1px;animation:blink 1.2s steps(2) infinite}
+
+  @keyframes blink{50%{opacity:0}}
+  @keyframes push{from{transform:scale(1)}to{transform:scale(1.45)}}
+  @keyframes pull{from{transform:scale(1.9)}to{transform:scale(1)}}
+  @keyframes tilt{from{transform:scale(1.35) translateY(-12%)}to{transform:scale(1.35) translateY(12%)}}
+  @keyframes hyper{from{transform:scale(1)}to{transform:scale(1.6)}}
+  @keyframes handin{0%,25%{transform:translate(45%,-70%)}70%,100%{transform:translate(0,0)}}
+  @keyframes drift{from{transform:translateX(var(--d))}to{transform:translateX(calc(-1 * var(--d)))}}
+  @keyframes stream{from{transform:translateX(0)}to{transform:translateX(-60%)}} /* items repeat every 60% -> seamless loop */
+  @keyframes cross{from{transform:translateX(-75%)}to{transform:translateX(75%)}}
+  @keyframes bob{50%{transform:translateY(-4%)}}
+  @keyframes blurA{0%,30%{filter:blur(0)}70%,100%{filter:blur(5px)}}
+  @keyframes blurB{0%,30%{filter:blur(5px)}70%,100%{filter:blur(0)}}
+  @keyframes slideoff{0%,20%{transform:translateX(0)}80%,100%{transform:translateX(-110%)}}
+  @keyframes dz{from{transform:scale(1)}to{transform:scale(2)}}
+  @keyframes whipA{0%,40%{transform:translateX(0);filter:blur(0);opacity:1}50%{transform:translateX(-70%);filter:blur(8px);opacity:1}50.1%,100%{opacity:0}}
+  @keyframes whipB{0%,50%{transform:translateX(70%);filter:blur(8px);opacity:0}50.1%{opacity:1}60%,100%{transform:translateX(0);filter:blur(0);opacity:1}}
+  @keyframes wipebar{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+  @keyframes cutA{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+  @keyframes cutB{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+  @keyframes approach{from{transform:scale(.3)}to{transform:scale(1)}}
+
+  .m-push .s{animation:push 5s ease-in-out infinite alternate}
+  .m-pull .s{animation:pull 5s ease-in-out infinite alternate}
+  .m-tilt .s{animation:tilt 5s ease-in-out infinite alternate}
+  .m-hyper .s{animation:hyper 4s steps(8) infinite}
+  .m-topdown .f{animation:handin 4s ease-in-out infinite alternate}
+  .m-parallax .L{animation:drift 6s ease-in-out infinite alternate}
+  .m-parallax .b{--d:3%} .m-parallax .m{--d:10%} .m-parallax .f{--d:30%}
+  .m-window .b{--d:2%;animation:drift 8s ease-in-out infinite alternate}
+  .m-window .m{animation:stream 4s linear infinite}
+  .m-window .f{animation:stream .8s linear infinite}
+  .m-follow .b{animation:stream 3s linear infinite}
+  .m-follow .m{animation:bob .6s ease-in-out infinite}
+  .m-lockoff .f{animation:cross 6s linear infinite}
+  .m-crowd .m{animation:cross 2.6s linear infinite}
+  .m-crowd .f{animation:cross 1.5s linear infinite}
+  .m-pass .f{animation:cross 1s linear infinite}
+  .m-timelapse .m{animation:cross 3s linear infinite}
+  .m-rack .f{animation:blurA 4s ease-in-out infinite alternate}
+  .m-rack .b{animation:blurB 4s ease-in-out infinite alternate}
+  .m-reveal .f{animation:slideoff 5s ease-in-out infinite alternate}
+  .m-dolly .b{animation:dz 5s ease-in-out infinite alternate}
+  .m-orbit .b{--d:25%;animation:drift 5s ease-in-out infinite alternate}
+  .m-whip .m{animation:whipA 4s linear infinite}
+  .m-whip .f{animation:whipB 4s linear infinite}
+  .m-match .m{animation:cutA 3s linear infinite}
+  .m-match .f{animation:cutB 3s linear infinite}
+  .m-wipe .x{animation:wipebar 3s linear infinite}
+  .m-wipe .m{animation:cutA 3s linear infinite}
+  .m-wipe .f{animation:cutB 3s linear infinite}
+  .m-jumpcut .m{animation:cutA 3s linear infinite}
+  .m-jumpcut .f{animation:cutB 3s linear infinite}
+  .m-approach .f{animation:approach 5s ease-in-out infinite alternate}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>shot <span class="grad">cheat sheet</span> 🎬</h1>
+  <p class="sub">camera moves for a travel montage. each frame loops the move; grid lines are the rule of thirds.</p>
+  <div class="rules">
+    <span><b>every place:</b> wide → medium → close → detail → odd angle</span>
+    <span><b>hold 2 s</b> still before and after each move</span>
+    <span><b>24 fps</b>, shutter 1/50 (2× frame rate)</span>
+    <span><b>slow-mo:</b> shoot 60/120 fps, play at 24</span>
+    <span><b>lock AE/AF</b> so exposure doesn't pump</span>
+    <span><b>cut on motion</b>, roughly to the beat</span>
+    <span><b>vlog bits:</b> 5–15 s, dropped between montage runs</span>
+  </div>
+  <div id="sheet"></div>
+</div>
+
+<script>
+// Item: [glyph, x%, y%, size cqw, cls?]; rect: ['#color', x%, y%, w%, h%] (top-left anchored).
+// Layers draw b -> m -> f -> x. Repeating 'stream' layers place items every 60% so the loop is seamless.
+const SHEET = [
+  ['🍜', 'food', [
+    {n:'overhead hands-in', mv:'topdown', sky:'#3b2416,#1d120b', L:{b:[['#5a3a22',8,10,84,80]], m:[['🍜',50,52,30]], f:[['🥢',63,32,20]]},
+     how:'Phone flat above the table, locked. Let hands or chopsticks enter and leave the frame.', set:'AE/AF lock · 4–6 s'},
+    {n:'push-in on steam', mv:'push', sky:'#2a1a10,#120b06', L:{m:[['🍜',50,62,30]], f:[['♨️',50,26,14]]},
+     how:'Slow move toward the bowl while steam rises. Backlight makes steam visible.', set:'60 fps, play at 24'},
+    {n:'rack focus', mv:'rack', sky:'#3a2318,#1a100a', L:{b:[['🍢',66,52,22]], f:[['🏮',22,40,34]]},
+     how:'Something close in the foreground, the dish behind. Shift focus between them mid-shot.', set:'tap-to-focus or Cinematic mode'},
+  ]],
+  ['⛩️', 'temples & architecture', [
+    {n:'tilt-up reveal', mv:'tilt', sky:'#6b8fc9,#f2b68a', L:{b:[['#7a6a5a',0,70,100,30]], m:[['⛩️',50,40,42]], f:[['🪨',30,86,10],['🪨',70,88,8]]},
+     how:'Start on the steps or ground, tilt slowly up to the gate.', set:'5–8 s for the move'},
+    {n:'foreground reveal', mv:'reveal', sky:'#86a9d6,#e9c9a0', L:{b:[['#6f7f58',0,74,100,26]], m:[['🏯',50,50,40]], f:[['#1b120c',0,0,100,100]]},
+     how:'Start hidden behind a pillar or tree, slide sideways to reveal the building.', set:'move from the hips · gimbal helps'},
+    {n:'symmetry lock-off', mv:'lockoff', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28]], m:[['⛩️',50,46,44]], f:[['🚶',50,74,14]]},
+     how:'Dead center on a tripod or wall. Let people walk through the frame.', set:'1/50 s · ND filter in daylight'},
+  ]],
+  ['🏙️', 'street & city', [
+    {n:'follow walk', mv:'follow', sky:'#9ec5e8,#e8d6b8',
+     L:{b:[['#6d6a66',-20,72,240,28],['🏪',-10,50,26],['🏢',20,46,30],['🏪',50,50,26],['🏢',80,46,30],['🏪',110,50,26],['🏢',140,46,30]], m:[['🚶',42,70,22]]},
+     how:'Walk beside or behind a companion at their pace. Keep them in the same spot of the frame.', set:'bent knees, heel-to-toe'},
+    {n:'low-angle crowd', mv:'crowd', sky:'#a9c8e6,#d9c7ad', L:{b:[['#5d5a57',0,82,100,18],['🏬',50,40,40]], m:[['🚶‍♀️',35,66,22]], f:[['🚶',60,70,36]]},
+     how:'Camera near the ground. Let the crowd stream past the lens.', set:'0.5× wide · 1/25–1/50 for blur'},
+    {n:'hyperlapse', mv:'hyper', sky:'#87b3e0,#f0d2b0', L:{b:[['#6d6a66',0,78,100,22]], m:[['🗼',50,48,40]]},
+     how:'Pick a fixed point. One step, one photo, ~150 times, keeping the point centered.', set:'Hyperlapse mode or stabilize in post'},
+  ]],
+  ['🚄', 'trains & transit', [
+    {n:'window parallax', mv:'window', sky:'#bcd7f0,#e6eef5',
+     L:{b:[['🗻',55,40,34]], m:[['#7fae6f',-20,62,240,40],['🌲',10,62,14],['🌲',40,64,12],['🌲',70,62,14],['🌲',100,64,12],['🌲',130,62,14]],
+        f:[['#2a2e35',10,0,4,100],['#2a2e35',70,0,4,100],['#2a2e35',130,0,4,100]]},
+     how:'Shoot out the window. Near things streak, far things drift.', set:'lens on the glass, hand over it to kill reflections'},
+    {n:'platform pass-by', mv:'pass', sky:'#c9d6e2,#9aa8b5', L:{b:[['#d8c23a',0,78,100,3],['#55595f',0,81,100,19]], f:[['🚄',50,56,60]]},
+     how:'Locked off behind the yellow line. Let the train blast through.', set:'1/15–1/30, braced, for streaks'},
+    {n:'detail cutaway', mv:'push', sky:'#3b3f4a,#23262d', L:{m:[['🍱',38,56,26]], f:[['🎫',70,46,18]]},
+     how:'Close-ups of tickets, bento, the seat-back view. Cut these between wides.', set:'2× or macro · ~3 s each'},
+  ]],
+  ['🏔️', 'landscape', [
+    {n:'foreground slide', mv:'parallax', sky:'#5a7fc4,#ffb37a', L:{b:[['🏔️',50,48,44]], m:[['#557a4a',-20,70,140,30]], f:[['🌾',10,80,24],['🌾',60,84,26],['🌾',100,80,24]]},
+     how:'Slow pan or side-step with grass or a branch close to the lens for depth.', set:'slow: 6–10 s'},
+    {n:'cloud timelapse', mv:'timelapse', sky:'#3f6fb8,#9cc3ea', L:{b:[['🏔️',50,60,48]], m:[['☁️',30,22,18],['☁️',70,30,14]]},
+     how:'Tripod, one frame every 2 s for 10 min = 300 frames ≈ 12 s at 24 fps.', set:'manual exposure (AE lock) to stop flicker'},
+    {n:'pull-out reveal', mv:'pull', sky:'#ffcf8a,#7a9fd6', L:{b:[['🏔️',35,58,40],['🏔️',75,62,34]], m:[['🧍',50,46,6]]},
+     how:'Start tight on a person, then back away (or drone up) to show the scale.', set:'drone: slow climb · phone: walk backward'},
+  ]],
+  ['🌃', 'night & neon', [
+    {n:'puddle reflection tilt', mv:'tilt', sky:'#120a2a,#2a1340',
+     L:{b:[['#0d1424',0,56,100,44]], m:[['🏮',35,30,18],['🏮',65,30,18],['🏮',35,78,18,'flip'],['🏮',65,78,18,'flip']]},
+     how:'Lens just above a puddle. Tilt up from the reflection to the real sign.', set:'expose for the neon'},
+    {n:'bokeh rack', mv:'rack', sky:'#150b2c,#3a1747', L:{b:[['🧍',58,58,30]], f:[['✨',18,30,20],['✨',32,74,16],['✨',86,40,18]]},
+     how:'Shoot through string lights close to the lens, then rack focus to your subject.', set:'widest aperture or portrait video'},
+    {n:'orbit', mv:'orbit', sky:'#0e0a24,#241240', L:{b:[['🌆',10,52,30],['🏙️',50,50,34],['🌆',90,52,30]], m:[['🧍',50,62,30]]},
+     how:'Circle your subject at a constant distance. The background slides behind them.', set:'subject centered · gimbal'},
+  ]],
+  ['🎙️', 'vlog & talking', [
+    {n:'selfie walk-and-talk', mv:'follow', sky:'#9ec5e8,#e8d6b8',
+     L:{b:[['#6d6a66',-20,72,240,28],['🏪',-10,50,26],['🏢',20,46,30],['🏪',50,50,26],['🏢',80,46,30],['🏪',110,50,26],['🏢',140,46,30]], m:[['🧑',50,60,40]]},
+     how:'Arm’s length, eyes on the upper third. Talk while you walk so the street moves behind you.', set:'0.5× · Action mode · clip-on mic'},
+    {n:'set-down talk', mv:'still', sky:'#86a9d6,#e9c9a0', L:{b:[['#6f7f58',0,70,100,30],['🏯',75,48,26]], m:[['#5a3a22',0,84,100,16]], f:[['🧑',33,60,36],['☕',58,86,10]]},
+     how:'Prop the phone on a table or ledge. Sit on one third, scenery in the rest. Best spot for a longer thought.', set:'eye level · 1× · under 60 s'},
+    {n:'jump-cut punch-in', mv:'jumpcut', sky:'#3b3f4a,#23262d', L:{m:[['🧑',50,62,30]], f:[['🧑',50,66,52]]},
+     how:'Talk in one take, cut out the pauses. Alternate normal and punched-in framing so the cuts look deliberate.', set:'shoot 4K · punch in 130–150% in edit'},
+    {n:'talk, then turn', mv:'whip', sky:'#1d2230,#2c3446', L:{m:[['#9ec5e8',0,0,100,100],['🧑',50,60,40]], f:[['#86a9d6',0,0,100,100],['⛩️',50,50,40]]},
+     how:'Say the line to camera, then swing the phone around to what you’re talking about. Same take, no cut.', set:'front lens the whole time'},
+    {n:'walk-in intro', mv:'approach', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28],['⛩️',50,40,34]], f:[['🧑',50,66,36]]},
+     how:'Lock the phone off, walk from the background up to the lens, start talking when you arrive.', set:'AF lock on the end spot'},
+    {n:'voiceover on b-roll', mv:'push', sky:'#5a7fc4,#ffb37a', L:{b:[['🏔️',50,52,44]], f:[['🎙️',86,78,12]]},
+     how:'Record the line as audio only and lay it over montage clips. You talk without stopping the visuals.', set:'quiet room · mic ~15 cm away'},
+  ]],
+  ['🧍', 'people & human moments', [
+    {n:'dolly zoom', mv:'dolly', sky:'#8a9fb5,#d8c7b0', L:{b:[['⛩️',50,42,30]], f:[['🧍',50,64,30]]},
+     how:'Walk backward while zooming in, so the subject stays the same size and the background swells.', set:'needs a smooth zoom · practise first'},
+    {n:'silhouette', mv:'still', sky:'#ff9a4d,#ffd28a', L:{b:[['#2b1a12',0,80,100,20]], f:[['🧍',50,58,34,'sil']]},
+     how:'Subject against a bright sky or window. Expose for the sky.', set:'golden hour · AE lock on the sky'},
+    {n:'over-the-shoulder', mv:'push', sky:'#9bb7dc,#e8d3b2', L:{b:[['🏯',62,46,30]], f:[['#1a1410',-10,40,40,70]]},
+     how:'Shoot past their shoulder toward what they are looking at. Gives the viewer their POV.', set:'cut to the wide right after'},
+    {n:'hands doing things', mv:'push', sky:'#3b2416,#1d120b', L:{m:[['🎫',58,48,16]], f:[['✋',42,62,30]]},
+     how:'Tight on hands paying, pouring, lighting incense, holding a ticket. A person without needing a face.', set:'2× · ~3 s · shoot lots'},
+    {n:'follow-me lead', mv:'push', sky:'#9bb7dc,#e8d3b2', L:{b:[['⛩️',58,42,30]], f:[['🤚',28,74,30]]},
+     how:'Your companion holds your hand and pulls you toward the next place. Your POV, their arm in frame.', set:'0.5× · walk smoothly'},
+    {n:'candid reaction', mv:'rack', sky:'#3a2318,#1a100a', L:{b:[['😄',66,46,28]], f:[['🍡',24,62,32]]},
+     how:'First bite, first look at the view. Rack from the thing to their face, keep rolling past the moment.', set:'start early · hold 3 s after'},
+    {n:'local at work', mv:'still', sky:'#2a1a10,#120b06', L:{b:[['🏮',78,30,16]], m:[['🧑‍🍳',40,56,36]], f:[['♨️',62,70,12]]},
+     how:'Chef at the grill, vendor, station staff. Ask first, then a 3–5 s portrait while they work.', set:'1× or 2× · don’t push the lens in faces'},
+  ]],
+  ['✂️', 'transitions', [
+    {n:'whip pan', mv:'whip', sky:'#1d2230,#2c3446', L:{m:[['#3b2416',0,0,100,100],['🍜',50,55,30]], f:[['#86a9d6',0,0,100,100],['🏯',50,52,36]]},
+     how:'End one clip with a fast pan, start the next with a fast pan the same way. Cut mid-blur.', set:'1/50 or slower so the blur is real'},
+    {n:'match cut', mv:'match', sky:'#1d2230,#2c3446', L:{m:[['#ff9a4d',0,0,100,100],['🌕',35,40,22]], f:[['#160c2c',0,0,100,100],['🏮',35,40,22]]},
+     how:'Same shape in the same spot of the frame across two places (sun → lantern, gate → gate).', set:'use the grid to place it'},
+    {n:'object wipe', mv:'wipe', sky:'#1d2230,#2c3446', L:{m:[['#9bb7dc',0,0,100,100],['⛩️',50,50,40]], f:[['#87b3e0',0,0,100,100],['🗼',50,50,40]], x:[['#111',0,0,100,100]]},
+     how:'Pass something close across the lens (pole, person) at the end and start of two clips. Cut when it fills the frame.', set:'same direction both times'},
+  ]],
+];
+
+const item = ([g, x, y, a, b]) => g.startsWith('#')
+  ? `<div class="rect" style="background:${g};left:${x}%;top:${y}%;width:${a}%;height:${b}%"></div>`
+  : `<div class="it ${b || ''}" style="left:${x}%;top:${y}%;font-size:${a}cqw">${g}</div>`;
+const layers = L => ['b', 'm', 'f', 'x'].map(k => `<div class="L ${k}">${(L[k] || []).map(item).join('')}</div>`).join('');
+
+document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
+  <section><h2><i>${icon}</i>${title}</h2><div class="grid">${shots.map(s => `
+    <div class="tile">
+      <div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})">
+        <div class="s">${layers(s.L)}</div><span class="tag">${s.mv}</span>
+      </div>
+      <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
+    </div>`).join('')}</div></section>`).join('');
+</script>
+</body>
+</html>
