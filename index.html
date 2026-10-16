@@ -2,33 +2,60 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0c">
+<meta name="color-scheme" content="dark">
 <title>shot cheat sheet 🎬</title>
 <style>
-  :root{--plane:#0a0a0c;--surface:#16161b;--ink:#fff;--ink-2:#c3c2b7;--muted:#898781;--ring:rgba(255,255,255,.10);--rec:#ff4d4d}
+  :root{--plane:#0a0a0c;--surface:#16161b;--surface-2:#1f1f26;--ink:#fff;--ink-2:#c3c2b7;--muted:#9a988f;--ring:rgba(255,255,255,.10);--ring-2:rgba(255,255,255,.22);
+         --accent:#86b6ef;--accent-2:#d95926;--rec:#ff4d4d;--pad:clamp(16px,3vw,40px);--nav-h:52px;color-scheme:dark}
+  html{scroll-padding-top:calc(var(--nav-h) + 12px)}
+  @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     background:radial-gradient(80rem 40rem at 15% -10%,#1b2a4a 0%,transparent 60%),
                radial-gradient(60rem 35rem at 90% 0%,#3a1e14 0%,transparent 55%),var(--plane);
     color:var(--ink);font:400 15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;
-    -webkit-font-smoothing:antialiased;padding:clamp(16px,3vw,40px);min-height:100vh
+    -webkit-font-smoothing:antialiased;padding:var(--pad);padding-top:max(var(--pad),env(safe-area-inset-top));min-height:100vh
   }
   .wrap{max-width:1180px;margin:0 auto}
   h1{font-size:clamp(30px,5.5vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.02}
   h1 .grad{background:linear-gradient(92deg,#86b6ef,#d95926 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .sub{color:var(--ink-2);margin-top:8px}
-  .rules{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 8px}
-  .rules span{background:var(--surface);border:1px solid var(--ring);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink-2)}
+  .sub{color:var(--ink-2);margin-top:8px;max-width:62ch}
+
+  /* general rules: a scannable list (one tip per row on phones, columns on wider screens) */
+  .rules{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));margin:20px 0 4px;
+         background:var(--surface);border:1px solid var(--ring);border-radius:14px;overflow:hidden}
+  .rules li{padding:9px 14px;font-size:13.5px;color:var(--ink-2);box-shadow:1px 0 0 var(--ring),0 1px 0 var(--ring)}
   .rules b{color:var(--ink)}
 
-  section{margin-top:34px}
-  h2{font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:12px}
-  h2 i{font-style:normal;font-size:20px;margin-right:6px;vertical-align:-2px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-  .tile{background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:10px 10px 14px}
-  .tile h3{font-size:16px;font-weight:700;margin:10px 4px 4px}
-  .tile p{font-size:13.5px;color:var(--ink-2);margin:0 4px}
-  .tile .set{display:inline-block;margin:8px 4px 0;font-size:12px;color:#86b6ef;background:rgba(134,182,239,.08);border-radius:8px;padding:3px 8px}
+  /* sticky jump nav: scrolls sideways on phones, wraps on desktop */
+  .toc{position:sticky;top:0;z-index:20;margin:18px calc(-1 * var(--pad)) 0;padding:8px var(--pad);
+       background:rgba(10,10,12,.82);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+       border-bottom:1px solid var(--ring)}
+  .toc ul{position:relative;list-style:none;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+          max-width:1180px;margin:0 auto;padding-right:28px;mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+  .toc ul::-webkit-scrollbar{display:none}
+  .toc a{display:flex;align-items:center;gap:6px;white-space:nowrap;min-height:36px;padding:0 12px;border-radius:999px;
+         font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--surface);border:1px solid var(--ring)}
+  .toc a small{font-weight:500;color:var(--muted);font-size:12px}
+  .toc a:hover{border-color:var(--ring-2);color:var(--ink)}
+  .toc a[aria-current="true"]{background:var(--ink);color:var(--plane);border-color:var(--ink)}
+  .toc a[aria-current="true"] small{color:#55534d}
+  @media (min-width:900px){.toc ul{flex-wrap:wrap;padding-right:0;mask-image:none}}
+  a:focus-visible,.vf:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  section{margin-top:40px}
+  h2{display:flex;align-items:center;gap:10px;font-size:clamp(19px,2.4vw,22px);font-weight:750;letter-spacing:-.01em;margin-bottom:14px}
+  h2 i{font-style:normal;font-size:1.15em}
+  h2 small{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0}
+  h2::after{content:"";flex:1;height:1px;background:var(--ring);margin-left:4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px}
+  .tile{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:10px 10px 14px}
+  .tile h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:12px 4px 4px}
+  .tile p{font-size:14px;color:var(--ink-2);margin:0 4px 10px;max-width:60ch}
+  .tile .set{align-self:flex-start;margin:auto 4px 0;font-size:12.5px;color:var(--accent);background:rgba(134,182,239,.10);
+             border:1px solid rgba(134,182,239,.16);border-radius:8px;padding:3px 8px}
 
   /* viewfinder: scene layers inside a clipped 16:9 frame; sizes in cqw so glyphs scale with the tile */
   .vf{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:10px;container-type:inline-size}
@@ -43,7 +70,7 @@
                linear-gradient(transparent 33.2%,rgba(255,255,255,.18) 33.3% 33.6%,transparent 33.7% 66.4%,rgba(255,255,255,.18) 66.5% 66.8%,transparent 66.9%)
   }
   .tag{position:absolute;z-index:6;left:8px;top:7px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.08em;color:#fff;
-       background:rgba(0,0,0,.45);padding:4px 6px;border-radius:5px}
+       background:rgba(0,0,0,.62);padding:4px 6px;border-radius:5px}
   .tag::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rec);margin-right:5px;
        vertical-align:1px;animation:blink 1.2s steps(2) infinite}
 
@@ -103,25 +130,38 @@
   @keyframes spin{from{transform:scale(1.6) rotate(0)}to{transform:scale(1.6) rotate(180deg)}} /* scale hides the corners */
   .m-spin .s{animation:spin 6s ease-in-out infinite alternate}
   .m-pan .b{--d:15%;animation:drift 8s ease-in-out infinite alternate}
-  .m-dutch .s{transform:rotate(-14deg) scale(1.3)}
+  .m-dutch .s{transform:rotate(-14deg) scale(1.42)} /* 1.42 = cos14 + 16/9*sin14, so the ground's edges never show */
+
+  /* pause tiles that are off-screen (set by JS) — saves battery on long phone scrolls */
+  .vf.off :is(.s,.L),.vf.off .tag::before{animation-play-state:paused}
+  /* reduced motion: frames hold still; hover or tap a frame to play it */
+  @media (prefers-reduced-motion:reduce){
+    .vf :is(.s,.L),.vf .tag::before{animation-play-state:paused}
+    .tile:hover .vf:not(.off) :is(.s,.L),.vf.play:not(.off) :is(.s,.L){animation-play-state:running}
+    .vf{cursor:pointer}
+    .vf::after{content:"▶ tap to play";position:absolute;z-index:6;right:8px;bottom:7px;font:600 10px/1 system-ui,sans-serif;
+               color:#fff;background:rgba(0,0,0,.62);padding:4px 6px;border-radius:5px}
+    .vf.play::after{content:"❚❚ pause"}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>shot <span class="grad">cheat sheet</span> 🎬</h1>
   <p class="sub">camera moves for a travel montage. each frame loops the move; grid lines are the rule of thirds.</p>
-  <div class="rules">
-    <span><b>every place:</b> wide → medium → close → detail → odd angle</span>
-    <span><b>hold 2 s</b> still before and after each move</span>
-    <span><b>24 fps</b>, shutter 1/50 (2× frame rate)</span>
-    <span><b>slow-mo:</b> shoot 60/120 fps, play at 24</span>
-    <span><b>lock AE/AF</b> so exposure doesn't pump</span>
-    <span><b>cut on motion</b>, roughly to the beat</span>
-    <span><b>vlog bits:</b> 5–15 s, dropped between montage runs</span>
-    <span><b>Pocket 4 modes:</b> Follow = everyday · Tilt Locked = flat horizon · FPV = rolls with your hand</span>
-    <span><b>joystick pans</b> are smoother than turning your wrist</span>
-    <span><b>Pocket slow-mo:</b> 4K/240 = 10× at 24 · D-Log only if you'll color-grade</span>
-  </div>
+  <ul class="rules" aria-label="General rules">
+    <li><b>every place:</b> wide → medium → close → detail → odd angle</li>
+    <li><b>hold 2 s</b> still before and after each move</li>
+    <li><b>24 fps</b>, shutter 1/50 (2× frame rate)</li>
+    <li><b>slow-mo:</b> shoot 60/120 fps, play at 24</li>
+    <li><b>lock AE/AF</b> so exposure doesn't pump</li>
+    <li><b>cut on motion</b>, roughly to the beat</li>
+    <li><b>vlog bits:</b> 5–15 s, dropped between montage runs</li>
+    <li><b>Pocket 4 modes:</b> Follow = everyday · Tilt Locked = flat horizon · FPV = rolls with your hand</li>
+    <li><b>joystick pans</b> are smoother than turning your wrist</li>
+    <li><b>Pocket slow-mo:</b> 4K/240 = 10× at 24 · D-Log only if you'll color-grade</li>
+  </ul>
+  <nav class="toc" aria-label="Jump to section"><ul id="toc"></ul></nav>
   <div id="sheet"></div>
 </div>
 
@@ -140,7 +180,7 @@ const SHEET = [
   ['⛩️', 'temples & architecture', [
     {n:'tilt-up reveal', mv:'tilt', sky:'#6b8fc9,#f2b68a', L:{b:[['#7a6a5a',0,70,100,30]], m:[['⛩️',50,40,42]], f:[['🪨',30,86,10],['🪨',70,88,8]]},
      how:'Start on the steps or ground, tilt slowly up to the gate.', set:'5–8 s for the move'},
-    {n:'foreground reveal', mv:'reveal', sky:'#86a9d6,#e9c9a0', L:{b:[['#6f7f58',0,74,100,26]], m:[['🏯',50,50,40]], f:[['#1b120c',0,0,100,100]]},
+    {n:'foreground reveal', mv:'reveal', sky:'#86a9d6,#e9c9a0', L:{b:[['#6f7f58',0,74,100,26]], m:[['🏯',50,50,40]], f:[['#1b120c',0,0,70,100]]},
      how:'Start hidden behind a pillar or tree, slide sideways to reveal the building.', set:'move from the hips · gimbal helps'},
     {n:'symmetry lock-off', mv:'lockoff', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28]], m:[['⛩️',50,46,44]], f:[['🚶',50,74,14]]},
      how:'Dead center on a tripod or wall. Let people walk through the frame.', set:'1/50 s · ND filter in daylight'},
@@ -157,7 +197,7 @@ const SHEET = [
   ['🌆', 'skyscrapers & city', [
     {n:'tower tilt-up', mv:'tilt', sky:'#4f86c6,#bcd6ef', L:{b:[['#5d5a57',0,82,100,18]], m:[['🏢',50,40,56]], f:[['🚶',30,86,10]]},
      how:'Stand at the base. Start on the entrance or street, tilt up the facade to the sky. Slower than feels right.', set:'Follow mode · joystick up · 6–8 s'},
-    {n:'corner reveal', mv:'reveal', sky:'#7aa4d8,#d9c7ad', L:{b:[['#5d5a57',0,76,100,24]], m:[['🏙️',50,50,46]], f:[['#2a2622',0,0,100,100]]},
+    {n:'corner reveal', mv:'reveal', sky:'#7aa4d8,#d9c7ad', L:{b:[['#5d5a57',0,76,100,24]], m:[['🏙️',50,50,46]], f:[['#2a2622',0,0,70,100]]},
      how:'Start tight on a wall, walk around the corner so the skyline or a big crossing opens up.', set:'Tilt Locked · walk slow'},
     {n:'observation deck pan', mv:'pan', sky:'#1c2a55,#e98a5a',
      L:{b:[['#141a30',-20,72,140,28],['🏢',-8,60,22],['🏙️',18,58,26],['🗼',45,50,30],['🏢',70,60,22],['🏙️',95,58,26],['🏢',115,60,22]]},
@@ -286,14 +326,49 @@ const item = ([g, x, y, a, b]) => g.startsWith('#')
   : `<div class="it ${b || ''}" style="left:${x}%;top:${y}%;font-size:${a}cqw">${g}</div>`;
 const layers = L => ['b', 'm', 'f', 'x'].map(k => `<div class="L ${k}">${(L[k] || []).map(item).join('')}</div>`).join('');
 
+const slug = t => t.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// readable move labels for the REC tag; unknown ids fall back to the raw id
+const MOVE = {topdown:'top-down', lockoff:'lock-off', hyper:'hyperlapse', rack:'rack focus', dolly:'dolly zoom', pass:'pass-by',
+  jumpcut:'jump cut', whip:'whip pan', match:'match cut', approach:'walk-in', spin:'spin', still:'static'};
+const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+document.getElementById('toc').innerHTML = SHEET.map(([icon, title, shots]) =>
+  `<li><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('');
+
 document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
-  <section><h2><i>${icon}</i>${title}</h2><div class="grid">${shots.map(s => `
+  <section id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
     <div class="tile">
-      <div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})">
-        <div class="s">${layers(s.L)}</div><span class="tag">${s.mv}</span>
+      <div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})" role="img" aria-label="${esc(s.n)}: ${MOVE[s.mv] || s.mv} demo">
+        <div class="s" aria-hidden="true">${layers(s.L)}</div><span class="tag" aria-hidden="true">${MOVE[s.mv] || s.mv}</span>
       </div>
       <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
     </div>`).join('')}</div></section>`).join('');
+
+// pause off-screen animations
+const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), {rootMargin: '100px 0px'});
+document.querySelectorAll('.vf').forEach(v => { v.classList.add('off'); io.observe(v); });
+
+// reduced motion: tap a frame to play / pause it
+const rm = matchMedia('(prefers-reduced-motion: reduce)');
+document.getElementById('sheet').addEventListener('click', e => {
+  const v = e.target.closest('.vf'); if (v && rm.matches) v.classList.toggle('play');
+});
+
+// highlight the section in view and keep its chip visible in the nav
+const toc = document.querySelector('.toc ul'), links = new Map([...toc.querySelectorAll('a')].map(a => [a.hash.slice(1), a]));
+const setActive = id => {
+  const a = links.get(id); if (!a || a.hasAttribute('aria-current')) return;
+  links.forEach(l => l.removeAttribute('aria-current'));
+  a.setAttribute('aria-current', 'true');
+  const li = a.parentElement;
+  if (toc.scrollWidth > toc.clientWidth) toc.scrollTo({left: li.offsetLeft - (toc.clientWidth - li.offsetWidth) / 2, behavior: rm.matches ? 'auto' : 'smooth'});
+};
+const spy = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setActive(e.target.id)), {rootMargin: '-30% 0px -65% 0px'});
+document.querySelectorAll('#sheet section').forEach(s => spy.observe(s));
+// the last sections are too short to reach the spy band, so the page bottom selects the last one
+addEventListener('scroll', () => {
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive([...links.keys()].pop());
+}, {passive: true});
 </script>
 </body>
 </html>
