@@ -8,7 +8,7 @@
 <title>shot cheat sheet 🎬</title>
 <style>
   :root{--plane:#0a0a0c;--surface:#16161b;--surface-2:#1f1f26;--ink:#fff;--ink-2:#c3c2b7;--muted:#9a988f;--ring:rgba(255,255,255,.10);--ring-2:rgba(255,255,255,.22);
-         --accent:#86b6ef;--accent-2:#d95926;--rec:#ff4d4d;--pad:clamp(16px,3vw,40px);--nav-h:52px;color-scheme:dark}
+         --accent:#86b6ef;--accent-2:#d95926;--rec:#ff4d4d;--pad:clamp(16px,3vw,40px);--nav-h:120px;color-scheme:dark}
   html{scroll-padding-top:calc(var(--nav-h) + 12px)}
   @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -43,6 +43,17 @@
   .toc a[aria-current="true"]{background:var(--ink);color:var(--plane);border-color:var(--ink)}
   .toc a[aria-current="true"] small{color:#55534d}
   @media (min-width:900px){.toc ul{flex-wrap:wrap;padding-right:0;mask-image:none}}
+  /* top-level tabs: 5 groups, each filters the page to its own sections */
+  .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;max-width:1180px;margin:0 auto 8px;padding:3px;
+          background:var(--surface);border:1px solid var(--ring);border-radius:12px}
+  .groups button{display:flex;flex-direction:column;align-items:center;gap:1px;min-height:44px;padding:4px 2px;border:0;border-radius:9px;
+                 background:none;color:var(--ink-2);font:600 12.5px/1.15 inherit;cursor:pointer}
+  .groups button span{font-size:17px}
+  .groups button:hover{color:var(--ink);background:var(--surface-2)}
+  .groups button[aria-selected="true"]{background:var(--ink);color:var(--plane)}
+  .groups button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  @media (min-width:700px){.groups button{flex-direction:row;justify-content:center;gap:7px;font-size:14px}}
+  section[hidden]{display:none}
   a:focus-visible,.vf:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   section{margin-top:40px}
@@ -169,7 +180,7 @@
     <li><b>joystick pans</b> are smoother than turning your wrist</li>
     <li><b>Pocket slow-mo:</b> 4K/240 = 10× at 24 · D-Log only if you'll color-grade</li>
   </ul>
-  <nav class="toc" aria-label="Jump to section"><ul id="toc"></ul></nav>
+  <nav class="toc" aria-label="Shot categories"><div class="groups" id="groups" role="tablist"></div><ul id="toc"></ul></nav>
   <div id="sheet"></div>
 </div>
 
@@ -384,11 +395,23 @@ const MOVE = {topdown:'top-down', lockoff:'lock-off', hyper:'hyperlapse', rack:'
   exit:'walk-away', rise:'pedestal', eyeline:'eyeline match', reach:'POV', lead:'leading'};
 const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
+// top-level tabs; every SHEET section must be listed in exactly one group
+const GROUPS = [
+  ['📍', 'Places', ['food', 'temples & architecture', 'street & city', 'skyscrapers & city', 'trains & transit', 'landscape']],
+  ['🌗', 'Light', ['night & neon', 'light & weather', 'shooting styles']],
+  ['🧍', 'People', ['vlog & talking', 'people & human moments']],
+  ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves']],
+  ['🎬', 'Story', ['transitions', 'scene grammar']],
+];
+const groupOf = Object.fromEntries(GROUPS.flatMap(([, g, ts], i) => ts.map(t => [slug(t), i])));
+const count = Object.fromEntries(SHEET.map(([, t, sh]) => [t, sh.length]));
+document.getElementById('groups').innerHTML = GROUPS.map(([icon, g, ts], i) =>
+  `<button role="tab" id="g-${slug(g)}" aria-selected="false" data-i="${i}"><span aria-hidden="true">${icon}</span>${g}</button>`).join('');
 document.getElementById('toc').innerHTML = SHEET.map(([icon, title, shots]) =>
-  `<li><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('');
+  `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('');
 
 document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
-  <section id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
+  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
     <div class="tile">
       <div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})" role="img" aria-label="${esc(s.n)}: ${MOVE[s.mv] || s.mv} demo">
         <div class="s" aria-hidden="true">${layers(s.L)}</div><span class="tag" aria-hidden="true">${MOVE[s.mv] || s.mv}</span>
@@ -406,6 +429,30 @@ document.getElementById('sheet').addEventListener('click', e => {
   const v = e.target.closest('.vf'); if (v && rm.matches) v.classList.toggle('play');
 });
 
+// show one group at a time: its tab, its chips, its sections
+let cur = -1;
+const showGroup = (i, scroll) => {
+  if (i === cur) return; cur = i;
+  document.querySelectorAll('#groups button').forEach(b => b.setAttribute('aria-selected', b.dataset.i == i));
+  document.querySelectorAll('#toc li, #sheet section').forEach(el => el.hidden = el.dataset.g != i);
+  links.forEach(l => l.removeAttribute('aria-current'));
+  const first = document.querySelector(`#sheet section[data-g="${i}"]`);
+  setActive(first.id);
+  if (scroll && document.querySelector('.toc').getBoundingClientRect().top <= 0) scrollTo({top: first.offsetTop - document.querySelector('.toc').offsetHeight - 12, behavior: 'auto'});
+};
+document.getElementById('groups').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  showGroup(+b.dataset.i, true);
+  history.replaceState(null, '', '#' + slug(GROUPS[b.dataset.i][1]));
+});
+const fromHash = () => {
+  const h = decodeURIComponent(location.hash.slice(1)), gi = GROUPS.findIndex(([, g]) => slug(g) === h);
+  if (gi >= 0) return showGroup(gi);
+  if (h in groupOf) { showGroup(groupOf[h]); document.getElementById(h).scrollIntoView(); return; }
+  showGroup(0);
+};
+addEventListener('hashchange', fromHash);
+
 // highlight the section in view and keep its chip visible in the nav
 const toc = document.querySelector('.toc ul'), links = new Map([...toc.querySelectorAll('a')].map(a => [a.hash.slice(1), a]));
 const setActive = id => {
@@ -419,8 +466,9 @@ const spy = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && s
 document.querySelectorAll('#sheet section').forEach(s => spy.observe(s));
 // the last sections are too short to reach the spy band, so the page bottom selects the last one
 addEventListener('scroll', () => {
-  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive([...links.keys()].pop());
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive([...document.querySelectorAll('#sheet section:not([hidden])')].pop().id);
 }, {passive: true});
+fromHash();
 </script>
 </body>
 </html>
