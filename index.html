@@ -70,7 +70,28 @@
   .tile{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:10px 10px 14px}
   .tile h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:12px 4px 4px}
   .tile p{font-size:14px;color:var(--ink-2);margin:0 4px 10px;max-width:60ch}
-  .tile .set{align-self:flex-start;margin:auto 4px 0;font-size:12.5px;color:var(--accent);background:rgba(134,182,239,.10);
+  /* shot roulette: one random shot whose parts fit together */
+  .roll{margin-top:16px;background:linear-gradient(135deg,rgba(134,182,239,.09),rgba(217,89,38,.09)),var(--surface);
+        border:1px solid var(--ring);border-radius:16px;padding:12px 14px}
+  .roll-bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .roll-bar b{display:block;font-size:16px}
+  .roll-bar span{font-size:13px;color:var(--ink-2)}
+  .roll button{min-height:40px;padding:0 16px;border-radius:999px;border:0;background:var(--ink);color:var(--plane);
+               font:700 14px/1 inherit;cursor:pointer;white-space:nowrap}
+  .roll button.alt{background:var(--surface-2);color:var(--ink);border:1px solid var(--ring-2)}
+  .roll button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .roll-card{display:grid;gap:14px;margin-top:12px}
+  @media (min-width:760px){.roll-card{grid-template-columns:minmax(260px,400px) 1fr;align-items:start}}
+  .roll .role{font-size:12px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:#f08a5d}
+  .roll .role small{display:block;margin-top:2px;font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+  .roll h3{font-size:clamp(18px,2.4vw,22px);font-weight:750;letter-spacing:-.01em;margin:8px 0 10px;line-height:1.2}
+  .roll dl{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13.5px}
+  .roll dt{color:var(--muted)} .roll dd{color:var(--ink-2)} .roll dd b{color:var(--ink)}
+  .roll dd a{color:var(--accent);text-decoration:none;white-space:nowrap} .roll dd a:hover{text-decoration:underline}
+  .roll .do{margin-top:10px;font-size:14px;color:var(--ink)}
+  .roll .set{display:inline-block;margin-top:8px}
+  .roll-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tile .set,.roll .set{align-self:flex-start;margin:auto 4px 0;font-size:12.5px;color:var(--accent);background:rgba(134,182,239,.10);
              border:1px solid rgba(134,182,239,.16);border-radius:8px;padding:3px 8px}
 
   /* viewfinder: scene layers inside a clipped 16:9 frame; sizes in cqw so glyphs scale with the tile */
@@ -185,6 +206,13 @@
     <li><b>joystick pans</b> are smoother than turning your wrist</li>
     <li><b>Pocket slow-mo:</b> 4K/240 = 10× at 24 · D-Log only if you'll color-grade</li>
   </ul>
+  <div class="roll" id="roll">
+    <div class="roll-bar">
+      <div><b>🎲 shot roulette</b><span>a random shot whose parts fit: subject, size, angle, move, and its job in the edit</span></div>
+      <button id="roll-go">🎲 Roll</button>
+    </div>
+    <div id="roll-out" aria-live="polite"></div>
+  </div>
   <nav class="toc" aria-label="Shot categories"><div class="groups" id="groups" role="tablist"></div><ul id="toc"></ul></nav>
   <div id="sheet"></div>
 </div>
@@ -399,6 +427,9 @@ const MOVE = {topdown:'top-down', lockoff:'lock-off', hyper:'hyperlapse', rack:'
   jumpcut:'jump cut', whip:'whip pan', match:'match cut', approach:'walk-in', spin:'spin', still:'static',
   exit:'walk-away', rise:'pedestal', eyeline:'eyeline match', reach:'POV', lead:'leading'};
 const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const frame = s => `<div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})" role="img" aria-label="${esc(s.n)}: ${MOVE[s.mv] || s.mv} demo">
+        <div class="s" aria-hidden="true">${layers(s.L)}</div><span class="tag" aria-hidden="true">${MOVE[s.mv] || s.mv}</span>
+      </div>`;
 
 // subject ideas: what to point the camera at. [icon, section, [[subject, note], ...]]
 const SUBJECTS = [
@@ -477,9 +508,7 @@ document.getElementById('toc').innerHTML = [...SHEET, ...SUBJECTS].map(([icon, t
 document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
     <div class="tile">
-      <div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})" role="img" aria-label="${esc(s.n)}: ${MOVE[s.mv] || s.mv} demo">
-        <div class="s" aria-hidden="true">${layers(s.L)}</div><span class="tag" aria-hidden="true">${MOVE[s.mv] || s.mv}</span>
-      </div>
+      ${frame(s)}
       <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
     </div>`).join('')}</div></section>`).join('') + SUBJECTS.map(([icon, title, ideas]) => `
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${ideas.length} ideas</small></h2>
@@ -491,8 +520,182 @@ document.querySelectorAll('.vf').forEach(v => { v.classList.add('off'); io.obser
 
 // reduced motion: tap a frame to play / pause it
 const rm = matchMedia('(prefers-reduced-motion: reduce)');
-document.getElementById('sheet').addEventListener('click', e => {
+document.addEventListener('click', e => {
   const v = e.target.closest('.vf'); if (v && rm.matches) v.classList.toggle('play');
+});
+
+// ---- shot roulette ----
+// Rolls a shot whose parts fit together. A filmmaker picks in this order:
+// the shot's job in the edit (role) -> a subject that can do that job -> a move suited to both
+// -> the size the role calls for -> an angle the move allows.
+// role: [icon, name, why, sizes, weight]
+const ROLES = {
+  est:  ['🌅', 'establish',   'Opens a scene: shows where you are before anything else.', ['xw', 'w'], 3],
+  exp:  ['🚶', 'explore',     'Moves the viewer through the place. Get 2–3 of these per spot.', ['w', 'm'], 3],
+  hum:  ['🧍', 'human beat',  'Puts a person in the place, so it feels lived in, not toured.', ['m', 'mcu', 'cu'], 3],
+  det:  ['🔍', 'detail',      'The texture of the place. Cut it between the bigger shots.', ['cu', 'ecu'], 3],
+  talk: ['🎙️', 'vlog beat',   'A 5–15 s talking moment between montage runs.', ['mcu', 'm'], 1],
+  pil:  ['🍃', 'pillow shot', 'A quiet pause between scenes. No action needed.', ['w', 'm', 'cu'], 1],
+  tr:   ['✂️', 'transition',  'Gets you out of this place and into the next one.', ['w', 'm'], 1],
+  end:  ['🌙', 'closer',      'Ends the scene or the day.', ['xw', 'w'], 1],
+};
+const ORDER = ['est', 'exp', 'hum', 'det', 'talk', 'pil', 'tr', 'end']; // a scene, start to finish
+const SZ = {xw:'extreme wide', w:'wide', m:'medium', mcu:'medium close-up', cu:'close-up', ecu:'extreme close-up / detail'};
+const ANG = {E:'eye level', L:'low angle', H:'high angle', B:'bird’s-eye', D:'dutch tilt', W:'hip level'};
+// sizes that make sense for each kind of subject (you can't extreme-wide a manhole cover)
+const KSZ = {thing:'m cu ecu', food:'m cu ecu', hands:'cu ecu', face:'mcu cu', vista:'xw w', tower:'xw w', place:'xw w m',
+  crowd:'xw w m', transit:'w m cu', motion:'w m cu ecu', person:'w m mcu', animal:'w m cu', night:'xw w m', light:'xw w m'};
+const PEOPLE = new Set(['person', 'face', 'hands', 'animal']);
+// generic subject types: [name, kind, examples]. KIND below tags the trip-specific ideas so a roll can
+// suggest one from the Subjects tab as "on this trip".
+const GENERIC = [
+  ['a landscape', 'vista', 'mountains, a lake, the sea, fields from a train'],
+  ['a skyline', 'vista', 'towers from a deck, a city across a river'],
+  ['a tall building', 'tower', 'a skyscraper, a TV tower, a pagoda'],
+  ['a building or shop front', 'place', 'a konbini, a temple gate, a café, a ramen stall'],
+  ['a street or lane', 'place', 'an alley, a shopping arcade, a quiet residential street'],
+  ['a night street', 'night', 'neon signs, lanterns, lit-up shop windows'],
+  ['a crowd', 'crowd', 'a crossing, a station at rush hour, a market'],
+  ['a train or vehicle', 'transit', 'a train, a bus, a taxi, a ferry'],
+  ['a static object', 'thing', 'a vending machine, a lantern, a parked bike, a sign'],
+  ['a moving object', 'motion', 'steam, a flag, a turning sign, water, laundry in the wind'],
+  ['a machine at work', 'motion', 'a ticket machine, a can dropping out, a departure board, a crossing signal'],
+  ['a texture or detail', 'thing', 'wood grain, a stamp, a manhole cover, rain on a sign'],
+  ['food', 'food', 'a bowl, a plate, a drink, a dessert'],
+  ['food being made', 'food', 'a cook at a grill, a pour, a flip, plating'],
+  ['light itself', 'light', 'a low sun, long shadows, a reflection, a flare'],
+  ['your companion', 'person', 'walking, looking, ordering, waiting'],
+  ['a face', 'face', 'a reaction, a laugh, a first bite'],
+  ['hands', 'hands', 'paying, pouring, holding a ticket, washing at a basin'],
+  ['a local at work', 'person', 'a chef, a vendor, station staff (ask first)'],
+  ['an animal', 'animal', 'deer, a cat on a step, birds, koi'],
+];
+// subject -> kind ('one signature shot per city' is left out: each of those already names its shot)
+const KIND = {'vending machines':'motion', 'konbini run':'place', 'crossing signals':'motion', 'station details':'transit',
+  'parked bikes':'thing', 'tiny lanes':'place', 'manhole covers':'thing', 'ticket machine to bowl':'food',
+  'street food cooking':'food', 'depachika halls':'food', 'steam':'motion', 'Seoul cafés':'food', 'temizuya':'hands',
+  'incense & offering':'thing', 'omikuji & ema':'thing', 'Fushimi Inari gates':'place', 'Nara deer':'animal',
+  'morning sweep':'person', 'winter illuminations':'night', 'year-end decor':'thing', 'low winter sun':'light',
+  'Mt Fuji':'vista', 'bundled up':'person', 'Shinjuku & Shibuya signs':'night', 'towers framed':'tower', 'Seoul':'place',
+  'Shanghai':'vista', 'elevated trains':'transit', 'companion\'s hands':'hands', 'first reactions':'face',
+  'makers at work':'person', 'in and out':'person', 'strangers, from afar':'crowd'};
+// move tile -> [roles, subject kinds it works on, angles it allows]
+const RECIPE = {
+  'overhead hands-in': ['det', 'food thing hands', 'B'],
+  'push-in on steam': ['det', 'food motion', 'E H'],
+  'rack focus': ['det', 'food thing motion night', 'E'],
+  'tilt-up reveal': ['est', 'place tower', 'L E'],
+  'foreground reveal': ['est', 'place vista tower', 'E'],
+  'symmetry lock-off': ['est pil', 'place transit', 'E'],
+  'follow walk': ['exp', 'place crowd person night', 'E W'],
+  'low-angle crowd': ['exp', 'crowd transit', 'L'],
+  'hyperlapse': ['est', 'place tower night crowd', 'E'],
+  'tower tilt-up': ['est', 'tower night', 'L'],
+  'corner reveal': ['est', 'place tower crowd night', 'E'],
+  'observation deck pan': ['est end', 'vista night tower', 'H'],
+  'crossing from above': ['est', 'crowd', 'B H'],
+  'light trails': ['est end', 'night', 'H'],
+  'frame in a frame': ['est pil', 'tower place vista', 'E L'],
+  'window parallax': ['exp tr', 'vista transit', 'E'],
+  'platform pass-by': ['exp tr', 'transit', 'E L'],
+  'detail cutaway': ['det', 'thing food transit motion', 'H E'],
+  'foreground slide': ['est', 'vista place', 'E L'],
+  'cloud timelapse': ['est pil', 'vista light', 'E L'],
+  'pull-out reveal': ['est end', 'person vista place', 'E H'],
+  'puddle reflection tilt': ['est pil', 'night place tower', 'L'],
+  'bokeh rack': ['hum', 'person face', 'E'],
+  'orbit': ['hum exp', 'person animal', 'E L'],
+  'sun peek flare': ['est pil', 'light place tower', 'L E'],
+  'rain-on-glass rack': ['pil', 'night place', 'E'],
+  'night window reflection': ['pil', 'night vista', 'E'],
+  'shadow walk': ['pil exp', 'light person', 'H'],
+  'selfie walk-and-talk': ['talk', 'place crowd night', 'E'],
+  'set-down talk': ['talk', 'place vista food', 'E'],
+  'talk, then turn': ['talk tr', 'place tower vista food animal night', 'E'],
+  'walk-in intro': ['talk est', 'place vista', 'E'],
+  'silhouette': ['hum end', 'person light', 'L E'],
+  'over-the-shoulder': ['hum exp', 'person vista place food tower', 'E'],
+  'hands doing things': ['det', 'hands food thing', 'H E'],
+  'follow-me lead': ['hum exp tr', 'person place crowd', 'E'],
+  'candid reaction': ['hum', 'face food animal', 'E'],
+  'local at work': ['hum', 'person food', 'E'],
+  'look, then see': ['hum', 'person vista place tower animal', 'E'],
+  'leading shot': ['hum exp', 'person place', 'E'],
+  'POV reach-in': ['det', 'hands thing motion food transit', 'E H'],
+  'Tilt Locked glide': ['exp', 'place night crowd', 'E W'],
+  'ground skim': ['exp tr', 'place crowd tower', 'L'],
+  'SpinShot sky-up': ['est tr', 'tower', 'L'],
+  'ActiveTrack walk-by': ['hum exp', 'person animal', 'E'],
+  'Motionlapse': ['est end', 'vista night light', 'H E'],
+  'whip pan': ['tr', 'place tower vista food crowd night transit person', 'E'],
+  'object wipe': ['tr', 'place crowd person', 'E'],
+  'pillow shot': ['pil', 'thing motion place night', 'E L'],
+  'frame in, frame out': ['tr pil', 'transit place crowd motion', 'E'],
+  'walk-away exit': ['end', 'person place transit', 'E'],
+  'still in the rush': ['hum est', 'crowd', 'E H'],
+  'escalator rise': ['est', 'place tower crowd', 'E'],
+  'sound-first clip': ['pil det', 'thing motion transit food place', 'E'],
+};
+const TILE = {};
+SHEET.forEach(([, sec, shots]) => shots.forEach(s => TILE[s.n] = {...s, sec}));
+const TRIP = SUBJECTS.flatMap(([, sec, ideas]) => ideas.map(([n]) => ({n, sec, k: KIND[n]}))).filter(s => s.k);
+const SUBJ = GENERIC.map(([n, k, t]) => ({n, k, t}));
+const MOVES = Object.entries(RECIPE).filter(([n]) => TILE[n]).map(([n, [r, k, a]]) => ({n, r: r.split(' '), k: k.split(' '), a: a.split(' ')}));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+// in a human or vlog beat the size frames the person, so a non-person subject becomes the backdrop
+const isBackdrop = (role, s) => (role === 'hum' || role === 'talk') && !PEOPLE.has(s.k);
+const sizesFor = (role, s) => isBackdrop(role, s) ? ROLES[role][3] : ROLES[role][3].filter(z => KSZ[s.k].split(' ').includes(z));
+const combos = (role, subj) => MOVES.filter(m => m.r.includes(role)).flatMap(m =>
+  (subj ? [subj] : SUBJ).filter(s => m.k.includes(s.k) && sizesFor(role, s).length).map(s => ({m, s})));
+const feels = n => (TILE[n]?.set.match(/feels: ([^·]+)/) || [, ''])[1].trim();
+const cap = t => t[0].toUpperCase() + t.slice(1);
+let last = null;
+
+function roll(role, subj, avoid) {
+  if (!role) { // weighted pick of a role
+    const bag = ORDER.flatMap(r => Array(ROLES[r][4]).fill(r));
+    role = pick(bag);
+  }
+  let cs = combos(role, subj);
+  if (avoid) cs = cs.filter(c => c.m.n !== avoid).length ? cs.filter(c => c.m.n !== avoid) : cs;
+  const {m, s} = pick(cs), [ricon, rname, why] = ROLES[role];
+  const backdrop = isBackdrop(role, s);
+  const tk = TRIP.filter(x => x.k === s.k), trip = tk.length ? pick(tk) : null;
+  const size = pick(sizesFor(role, s)), angle = pick(m.a), t = TILE[m.n];
+  const sz = SZ[size].replace(' / detail', '');
+  const head = backdrop ? (role === 'talk' ? `${sz} of you, ${s.n} behind` : `${sz} of your companion, ${s.n} around them`)
+                        : `${sz} of ${s.n}`;
+  last = {role, s, m: m.n};
+  document.getElementById('roll-out').innerHTML = `
+    <div class="roll-card">
+      ${frame(t)}
+      <div>
+        <p class="role">${ricon} ${rname}<small>${why}</small></p>
+        <h3>${cap(head)}, ${ANG[angle]}, ${t.n}</h3>
+        <dl>
+          <dt>subject</dt><dd><b>${s.n}</b>: ${s.t}</dd>
+          ${trip ? `<dt>this trip</dt><dd>${trip.n} <a href="#${slug(trip.sec)}">${trip.sec} ↗</a></dd>` : ''}
+          <dt>size</dt><dd><b>${SZ[size]}</b> <a href="#shot-sizes">sizes ↗</a></dd>
+          <dt>angle</dt><dd><b>${ANG[angle]}</b>${feels(ANG[angle]) ? ` · feels: ${feels(ANG[angle])}` : ''} <a href="#angles-and-what-they-say">angles ↗</a></dd>
+          <dt>move</dt><dd><b>${t.n}</b> <a href="#${slug(t.sec)}">${t.sec} ↗</a></dd>
+        </dl>
+        <p class="do">${t.how}</p><span class="set">${t.set}</span>
+        <div class="roll-btns"><button id="roll-again">🎲 Roll again</button><button class="alt" id="roll-next">➡️ Next shot, same subject</button></div>
+      </div>
+    </div>`;
+}
+// next shot: same subject, the next role in scene order that this subject can fill
+function next() {
+  const i = ORDER.indexOf(last.role);
+  for (let j = 1; j <= ORDER.length; j++) {
+    const r = ORDER[(i + j) % ORDER.length];
+    if (combos(r, last.s).length) return roll(r, last.s, last.m);
+  }
+}
+document.getElementById('roll').addEventListener('click', e => {
+  const id = e.target.closest('button')?.id;
+  if (id === 'roll-go' || id === 'roll-again') roll();
+  if (id === 'roll-next') next();
 });
 
 // show one group at a time: its tab, its chips, its sections
