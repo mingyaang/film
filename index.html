@@ -131,6 +131,14 @@
   .m-spin .s{animation:spin 6s ease-in-out infinite alternate}
   .m-pan .b{--d:15%;animation:drift 8s ease-in-out infinite alternate}
   .m-dutch .s{transform:rotate(-14deg) scale(1.42)} /* 1.42 = cos14 + 16/9*sin14, so the ground's edges never show */
+  .m-exit .f{animation:approach 5s ease-in-out infinite alternate-reverse}
+  .m-rise .s{animation:tilt 6s ease-in-out infinite alternate}
+  .m-eyeline .m{animation:cutA 3s linear infinite}
+  .m-eyeline .f{animation:cutB 3s linear infinite}
+  .m-reach .f{animation:handin 4s ease-in-out infinite alternate}
+  .m-lead .b{animation:pull 5s ease-in-out infinite alternate} /* camera backs away, so the background recedes */
+  .m-lead .m{animation:bob .6s ease-in-out infinite}
+  .ghost{opacity:.35}
 
   /* pause tiles that are off-screen (set by JS) — saves battery on long phone scrolls */
   .vf.off :is(.s,.L),.vf.off .tag::before{animation-play-state:paused}
@@ -238,6 +246,18 @@ const SHEET = [
     {n:'orbit', mv:'orbit', sky:'#0e0a24,#241240', L:{b:[['🌆',10,52,30],['🏙️',50,50,34],['🌆',90,52,30]], m:[['🧍',50,62,30]]},
      how:'Circle your subject at a constant distance. The background slides behind them.', set:'subject centered · gimbal'},
   ]],
+  ['🌤️', 'light & weather', [
+    {n:'sun peek flare', mv:'reveal', sky:'#ffcf8a,#7a9fd6', L:{b:[['☀️',62,30,22]], m:[['⛩️',50,56,40]], f:[['#1b120c',0,0,70,100]]},
+     how:'Hide the sun behind a pillar or building edge, then shift until it just peeks out. A controlled flare, not a blown-out frame.', set:'golden hour · lock exposure first'},
+    {n:'rain-on-glass rack', mv:'rack', sky:'#141a2a,#2a2f45', L:{b:[['🏮',40,44,24],['🚕',72,66,18]], f:[['💧',20,30,12],['💧',55,22,10],['💧',80,52,14],['💧',35,72,10]]},
+     how:'Lens close to a wet café or taxi window. Start sharp on the drops, then rack to the street lights behind.', set:'tap to focus: drops, then street'},
+    {n:'night window reflection', mv:'window', sky:'#0b0f22,#1c1838',
+     L:{b:[['🧑',32,54,40,'ghost']], m:[['✨',10,40,10],['🏙️',40,52,18],['✨',70,40,10],['🏙️',100,52,18],['✨',130,40,10]]},
+     how:'On a night train or at a high window, sit so your faint reflection overlays the city lights. Keep your side of the glass dim.', set:'don’t cover the glass · expose for the lights'},
+    {n:'shadow walk', mv:'follow', sky:'#c9a878,#a8875a',
+     L:{b:[['#8a7a66',-20,0,240,100],['#6f6252',-10,60,3,40],['#6f6252',50,60,3,40],['#6f6252',110,60,3,40]], m:[['🚶',42,62,30,'sil']]},
+     how:'Low sun behind you. Aim down at your long shadow on the pavement or a wall as you walk. A person without a face.', set:'early morning or late afternoon · Tilt Locked'},
+  ]],
   ['🎙️', 'vlog & talking', [
     {n:'selfie walk-and-talk', mv:'follow', sky:'#9ec5e8,#e8d6b8',
      L:{b:[['#6d6a66',-20,72,240,28],['🏪',-10,50,26],['🏢',20,46,30],['🏪',50,50,26],['🏢',80,46,30],['🏪',110,50,26],['🏢',140,46,30]], m:[['🧑',50,60,40]]},
@@ -268,6 +288,12 @@ const SHEET = [
      how:'First bite, first look at the view. Rack from the thing to their face, keep rolling past the moment.', set:'start early · hold 3 s after'},
     {n:'local at work', mv:'still', sky:'#2a1a10,#120b06', L:{b:[['🏮',78,30,16]], m:[['🧑‍🍳',40,56,36]], f:[['♨️',62,70,12]]},
      how:'Chef at the grill, vendor, station staff. Ask first, then a 3–5 s portrait while they work.', set:'1× or 2× · don’t push the lens in faces'},
+    {n:'look, then see', mv:'eyeline', sky:'#1d2230,#2c3446', L:{m:[['#9bb7dc',0,0,100,100],['🧑',40,60,44]], f:[['#86a9d6',0,0,100,100],['🏯',55,50,40]]},
+     how:'Shot 1: your companion looking off-frame at something. Shot 2: what they see, filmed from where they stand. The cut tells the story.', set:'always shoot both halves'},
+    {n:'leading shot', mv:'lead', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28],['⛩️',50,40,34]], m:[['🧑',50,62,36]]},
+     how:'Walk backward a few steps ahead of your companion, facing them, as they walk toward you. Face and place in one shot.', set:'Follow mode · check behind you first'},
+    {n:'POV reach-in', mv:'reach', sky:'#2a2e35,#1a1d22', L:{m:[['🎫',55,48,18]], f:[['✋',50,60,30]]},
+     how:'Camera at your eye line. Your own hand enters to take the ticket, slide the door, grab the can. The viewer becomes you.', set:'Pocket at chin height · 1×'},
   ]],
   ['🔭', 'shot sizes', [
     {n:'extreme wide', mv:'still', sky:'#5a7fc4,#ffb37a', L:{b:[['🏔️',30,46,30],['🏔️',72,50,26],['#557a4a',0,70,100,30]], m:[['🏘️',60,74,10]], f:[['🧍',40,80,4]]},
@@ -319,6 +345,31 @@ const SHEET = [
     {n:'object wipe', mv:'wipe', sky:'#1d2230,#2c3446', L:{m:[['#9bb7dc',0,0,100,100],['⛩️',50,50,40]], f:[['#87b3e0',0,0,100,100],['🗼',50,50,40]], x:[['#111',0,0,100,100]]},
      how:'Pass something close across the lens (pole, person) at the end and start of two clips. Cut when it fills the frame.', set:'same direction both times'},
   ]],
+  ['🎬', 'scene grammar', [
+    {n:'pillow shot', mv:'still', sky:'#1b2238,#0e1120', L:{b:[['#2a2622',0,74,100,26]], m:[['🏮',72,34,16],['🚲',32,70,26]]},
+     how:'An empty, quiet frame between scenes: a parked bike, laundry, a lantern, a vending machine at night. Yasujirō Ozu’s way of letting a film breathe.', set:'locked off · no people · 4–6 s'},
+    {n:'frame in, frame out', mv:'lockoff', sky:'#9ec5e8,#e8d6b8', L:{b:[['#6d6a66',0,74,100,26],['🏘️',50,50,30]], f:[['🚃',50,70,40]]},
+     how:'Start on an empty frame, let a train, bike or person cross, keep rolling until it’s empty again. A clean in and out point for the edit.', set:'locked off · 2 s empty each end'},
+    {n:'walk-away exit', mv:'exit', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28],['⛩️',50,40,34]], f:[['🚶',50,66,36]]},
+     how:'Locked off while you or your companion walk away down a path, platform or street until small. The natural last shot of a day.', set:'AE/AF lock · hold until they’re tiny'},
+    {n:'still in the rush', mv:'crowd', sky:'#a9c8e6,#d9c7ad', L:{b:[['#5d5a57',0,82,100,18],['🏬',50,40,40],['🧍',50,66,22]], m:[['🚶‍♀️',35,66,22]], f:[['🚶',60,70,36]]},
+     how:'Stand dead still in a busy crossing or station while a timelapse runs. You stay put, the crowd rushes around you.', set:'Timelapse mode · tripod · hold still 30 s+'},
+    {n:'escalator rise', mv:'rise', sky:'#4f86c6,#bcd6ef', L:{b:[['#5d5a57',0,82,100,18]], m:[['🏙️',50,40,50]], f:[['#3a3d42',0,86,100,14]]},
+     how:'Ride a long escalator or glass elevator with the camera level. The rise reveals the street or atrium: a crane shot for free.', set:'Tilt Locked · stand still, let it carry you'},
+    {n:'sound-first clip', mv:'still', sky:'#3a2318,#1a100a', L:{m:[['🔔',50,46,34]], f:[['🔊',82,78,12]]},
+     how:'Some clips are for their sound: a temple bell, train door chime, crossing beeper, sizzle. Stay quiet and get close for 5 s.', set:'no talking · wind cover outdoors'},
+  ]],
+  ['🎞️', 'shooting styles', [
+    {n:'Ozu stillness', mv:'still', sky:'#d8c7b0,#a89880', L:{b:[['#6f5a44',0,72,100,28]], m:[['🏯',75,44,24]], f:[['🧑',35,66,30],['🍵',55,82,10]]},
+     how:'Camera low, about seated height, and it never moves. People enter, talk and leave the frame. Suits temples, ryokan, tea.', set:'tripod or set-down · 1× · no moves'},
+    {n:'observational', mv:'still', sky:'#9ec5e8,#e8d6b8', L:{b:[['#6d6a66',0,74,100,26],['🏪',30,50,30],['🏪',72,50,30]], m:[['🧑‍🍳',30,66,12],['🚶',60,72,10]]},
+     how:'Film life from a distance without directing anyone: commuters, a shopkeeper, kids after school. The camera is a witness.', set:'2× from far back · long holds'},
+    {n:'long take', mv:'follow', sky:'#86a9d6,#e9c9a0',
+     L:{b:[['#7a6a5a',-20,72,240,28],['⛩️',-10,48,28],['🏮',20,42,18],['⛩️',50,48,28],['🏮',80,42,18],['⛩️',110,48,28],['🏮',140,42,18]], m:[['🚶‍♀️',42,70,22]]},
+     how:'One continuous shot with no cuts through a whole place: alley to shrine, platform to train seat. Plan the route, rehearse once.', set:'Tilt Locked · 30–90 s · walk slow'},
+    {n:'planimetric', mv:'still', sky:'#f2c4b0,#e8d3b2', L:{b:[['#d9a38a',0,0,100,100],['#8a5a44',38,30,24,50]], f:[['🧍',50,70,26]]},
+     how:'Camera square-on to a flat wall or shop front, subject centered, lines parallel to the frame. The Wes Anderson look.', set:'grid on · level · step back to stay flat'},
+  ]],
 ];
 
 const item = ([g, x, y, a, b]) => g.startsWith('#')
@@ -329,7 +380,8 @@ const layers = L => ['b', 'm', 'f', 'x'].map(k => `<div class="L ${k}">${(L[k] |
 const slug = t => t.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 // readable move labels for the REC tag; unknown ids fall back to the raw id
 const MOVE = {topdown:'top-down', lockoff:'lock-off', hyper:'hyperlapse', rack:'rack focus', dolly:'dolly zoom', pass:'pass-by',
-  jumpcut:'jump cut', whip:'whip pan', match:'match cut', approach:'walk-in', spin:'spin', still:'static'};
+  jumpcut:'jump cut', whip:'whip pan', match:'match cut', approach:'walk-in', spin:'spin', still:'static',
+  exit:'walk-away', rise:'pedestal', eyeline:'eyeline match', reach:'POV', lead:'leading'};
 const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 document.getElementById('toc').innerHTML = SHEET.map(([icon, title, shots]) =>
