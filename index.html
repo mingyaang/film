@@ -44,16 +44,21 @@
   .toc a[aria-current="true"] small{color:#55534d}
   @media (min-width:900px){.toc ul{flex-wrap:wrap;padding-right:0;mask-image:none}}
   /* top-level tabs: 5 groups, each filters the page to its own sections */
-  .groups{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;max-width:1180px;margin:0 auto 8px;padding:3px;
+  .groups{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;max-width:1180px;margin:0 auto 8px;padding:3px;
           background:var(--surface);border:1px solid var(--ring);border-radius:12px}
   .groups button{display:flex;flex-direction:column;align-items:center;gap:1px;min-height:44px;padding:4px 2px;border:0;border-radius:9px;
-                 background:none;color:var(--ink-2);font:600 12.5px/1.15 inherit;cursor:pointer}
+                 background:none;color:var(--ink-2);font:600 11.5px/1.15 inherit;cursor:pointer;min-width:0}
   .groups button span{font-size:17px}
   .groups button:hover{color:var(--ink);background:var(--surface-2)}
   .groups button[aria-selected="true"]{background:var(--ink);color:var(--plane)}
   .groups button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   @media (min-width:700px){.groups button{flex-direction:row;justify-content:center;gap:7px;font-size:14px}}
   section[hidden]{display:none}
+  /* subject ideas: text cards, no animation */
+  .ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px}
+  .idea{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:12px 14px}
+  .idea h3{font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:3px}
+  .idea p{font-size:13.5px;color:var(--ink-2)}
   a:focus-visible,.vf:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   section{margin-top:40px}
@@ -395,19 +400,78 @@ const MOVE = {topdown:'top-down', lockoff:'lock-off', hyper:'hyperlapse', rack:'
   exit:'walk-away', rise:'pedestal', eyeline:'eyeline match', reach:'POV', lead:'leading'};
 const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-// top-level tabs; every SHEET section must be listed in exactly one group
+// subject ideas: what to point the camera at. [icon, section, [[subject, note], ...]]
+const SUBJECTS = [
+  ['🏪', 'everyday Japan', [
+    ['vending machines', 'Glowing at night, and the can dropping out.'],
+    ['konbini run', 'The door chime, the hot-drink shelf, oden steaming by the register.'],
+    ['crossing signals', 'The walk-signal chirp and a crowd waiting at the curb.'],
+    ['station details', 'Platform lines, departure boards, staff bowing as the Shinkansen leaves.'],
+    ['parked bikes', 'Bikes in rows, or a lone cyclist with an umbrella.'],
+    ['tiny lanes', 'Power lines, potted plants and laundry overhead.'],
+    ['manhole covers', 'Each city has its own design: Nara deer, Osaka castle.'],
+  ]],
+  ['🍢', 'food in process', [
+    ['ticket machine to bowl', 'Press the button, hand over the ticket, the bowl lands on the counter.'],
+    ['street food cooking', 'Takoyaki flipping in Dotonbori, yakitori over charcoal.'],
+    ['depachika halls', 'Rows of wagashi, staff wrapping gifts.'],
+    ['steam', 'A stall pot, broth being poured, breath over a hot canned coffee.'],
+    ['Seoul cafés', 'Latte art and dessert plating. Seoul cafés are built to be filmed.'],
+  ]],
+  ['⛩️', 'temples & tradition', [
+    ['temizuya', 'Hand washing at the water basin, ladle and drip.'],
+    ['incense & offering', 'Smoke drifting, a coin dropped in the box.'],
+    ['omikuji & ema', 'Fortunes tied to racks, wooden plaques moving in the wind.'],
+    ['Fushimi Inari gates', 'From inside the tunnel of torii.'],
+    ['Nara deer', 'Deer bowing for crackers: a sure reaction shot.'],
+    ['morning sweep', 'Monks or shrine staff sweeping early.'],
+  ]],
+  ['❄️', 'December', [
+    ['winter illuminations', 'Roppongi, Marunouchi, Omotesando light displays.'],
+    ['year-end decor', 'Christmas markets, then kadomatsu pine decorations late in the month.'],
+    ['low winter sun', 'Long shadows by about 3 pm, blue hour near 4:45 pm in Tokyo.'],
+    ['Mt Fuji', 'Clear cold days give the best views: from a train window or a deck.'],
+    ['bundled up', 'Coats and scarves, hands around hot drinks, a heater in a doorway.'],
+  ]],
+  ['🌃', 'cities', [
+    ['Shinjuku & Shibuya signs', 'From street level, then the same view from above.'],
+    ['towers framed', 'Tokyo Tower or Skytree between buildings.'],
+    ['Seoul', 'Neon alleys in Euljiro and Jongno, palace gates against towers, the Han River at night.'],
+    ['Shanghai', 'The Pudong skyline from the Bund, Nanjing Road lights, shikumen lane houses.'],
+    ['elevated trains', 'Passing overhead, from below or from a footbridge.'],
+  ]],
+  ['🫶', 'people', [
+    ['companion\'s hands', 'Tickets, paying, picking up chopsticks, holding a map.'],
+    ['first reactions', 'The first bite, the first view.'],
+    ['makers at work', 'A chef at the counter, a vendor wrapping, a barista pouring.'],
+    ['in and out', 'The two of you entering and leaving each place. Doubles as transitions.'],
+    ['strangers, from afar', 'A salaryman on a train, school uniforms: wide and not face-on. Japan is strict about filming faces.'],
+  ]],
+  ['⭐', 'one signature shot per city', [
+    ['Tokyo', 'Shibuya Crossing from above at night.'],
+    ['Kyoto', 'An empty Higashiyama or Gion lane just after sunrise.'],
+    ['Osaka', 'The Glico sign and canal reflections in Dotonbori.'],
+    ['Nara', 'Deer with the Todai-ji gate behind.'],
+    ['DisneySea', 'Mediterranean Harbor at dusk.'],
+    ['Seoul', 'Gyeongbokgung gate with the city behind it.'],
+    ['Shanghai', 'The Pudong skyline from the Bund at blue hour.'],
+    ['daily rule', 'One signature shot, one food process, one detail and one human moment each day.'],
+  ]],
+];
+
+// top-level tabs; every SHEET and SUBJECTS section must be listed in exactly one group
 const GROUPS = [
   ['📍', 'Places', ['food', 'temples & architecture', 'street & city', 'skyscrapers & city', 'trains & transit', 'landscape']],
   ['🌗', 'Light', ['night & neon', 'light & weather', 'shooting styles']],
   ['🧍', 'People', ['vlog & talking', 'people & human moments']],
   ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves']],
   ['🎬', 'Story', ['transitions', 'scene grammar']],
+  ['💡', 'Subjects', SUBJECTS.map(([, t]) => t)],
 ];
 const groupOf = Object.fromEntries(GROUPS.flatMap(([, g, ts], i) => ts.map(t => [slug(t), i])));
-const count = Object.fromEntries(SHEET.map(([, t, sh]) => [t, sh.length]));
 document.getElementById('groups').innerHTML = GROUPS.map(([icon, g, ts], i) =>
   `<button role="tab" id="g-${slug(g)}" aria-selected="false" data-i="${i}"><span aria-hidden="true">${icon}</span>${g}</button>`).join('');
-document.getElementById('toc').innerHTML = SHEET.map(([icon, title, shots]) =>
+document.getElementById('toc').innerHTML = [...SHEET, ...SUBJECTS].map(([icon, title, shots]) =>
   `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('');
 
 document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
@@ -417,7 +481,9 @@ document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) =>
         <div class="s" aria-hidden="true">${layers(s.L)}</div><span class="tag" aria-hidden="true">${MOVE[s.mv] || s.mv}</span>
       </div>
       <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
-    </div>`).join('')}</div></section>`).join('');
+    </div>`).join('')}</div></section>`).join('') + SUBJECTS.map(([icon, title, ideas]) => `
+  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${ideas.length} ideas</small></h2>
+    <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('');
 
 // pause off-screen animations
 const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), {rootMargin: '100px 0px'});
