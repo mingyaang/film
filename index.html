@@ -245,6 +245,45 @@
                color:#fff;background:rgba(0,0,0,.62);padding:4px 6px;border-radius:5px}
     .vf.play::after{content:"❚❚ pause"}
   }
+
+  /* ND filter guide: reference cards with tables; one column on phones, two on wide screens */
+  .nd-lead{font-size:14px;color:var(--ink-2);margin:-4px 0 14px;max-width:70ch} .nd-lead b{color:var(--ink)}
+  .nd{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:14px;align-items:start}
+  .nd-card{background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:14px 16px;min-width:0}
+  .nd-card h3{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:10px}
+  .nd-card h3 small{display:block;margin-top:2px;font:500 12px/1.3 ui-monospace,monospace;color:var(--muted);letter-spacing:0}
+  .nd-card > p{font-size:13.5px;color:var(--ink-2);margin-top:10px} .nd-card > p b{color:var(--ink)}
+  .nd-steps{list-style:none;counter-reset:st;display:grid;gap:7px}
+  .nd-steps li{counter-increment:st;display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:13.5px;color:var(--ink-2)}
+  .nd-steps li::before{content:counter(st);display:grid;place-items:center;width:22px;height:22px;border-radius:50%;
+                       background:var(--surface-2);border:1px solid var(--ring-2);color:var(--ink);font-size:12px;font-weight:700}
+  .nd-steps b{color:var(--ink)}
+  .nd-rule{display:flex;gap:12px;align-items:center;margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13.5px;color:var(--ink-2);
+           background:rgba(134,182,239,.08);border:1px solid rgba(134,182,239,.2)}
+  .nd-rule b{color:var(--ink)} .nd-rule svg{flex:none;width:76px;height:40px}
+  .nd-warn{margin:0 0 12px;padding:10px 12px;border-radius:12px;font-size:14.5px;line-height:1.4;color:var(--ink);
+           background:rgba(217,89,38,.14);border:1px solid rgba(217,89,38,.5)}
+  .nd-warn strong{display:block;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:#f08a5d;margin-bottom:2px}
+  .nd-warn q{quotes:"“" "”";font-weight:750;white-space:nowrap}
+  .nd-tw{overflow-x:auto;margin:0 -4px}
+  .nd-t{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums}
+  .nd-t caption{text-align:left;font:600 12px/1 ui-monospace,monospace;color:var(--muted);padding:0 4px 8px}
+  .nd-t th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+           padding:6px 4px;border-bottom:1px solid var(--ring-2)}
+  .nd-t td{padding:7px 4px;border-bottom:1px solid var(--ring);color:var(--ink-2);vertical-align:middle}
+  .nd-t tr:last-child td{border-bottom:0}
+  .nd-t td b{color:var(--ink);white-space:nowrap}
+  .nd-t td:not(:first-child),.nd-t th:not(:first-child){white-space:nowrap}
+  .nd-t .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:0;background:var(--sw);
+            box-shadow:0 0 0 1px var(--ring-2)}
+  .nd-t .bar{display:block;height:4px;width:60px;margin-top:4px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+  .nd-t .bar::before{content:"";display:block;height:100%;width:calc(var(--s) * 10%);border-radius:2px;
+                     background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  .nd-t tr.hl td{background:rgba(217,89,38,.12)} .nd-t tr.hl td:first-child{box-shadow:inset 3px 0 0 var(--accent-2)}
+  .nd-opts{display:grid;gap:8px}
+  .nd-opts .idea{background:var(--surface-2)}
+  .nd-ex{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px;margin-bottom:10px}
+  .nd-ex dt{color:var(--muted)} .nd-ex dd{color:var(--ink-2)} .nd-ex dd b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -685,12 +724,90 @@ const SUBJECTS = [
   ]],
 ];
 
-// top-level tabs; every SHEET and SUBJECTS section must be listed in exactly one group
+// reference guides: [icon, section, h2 note, html]. Numbers come from ND_GUIDE.md; keep them in sync.
+// light rows: [light, swatch, stops label, stops for the bar, ND]; label rows: [factor, density, stops]
+const ND_LIGHT = [
+  ['Bright sun, beach or snow', '#fff6d8', '~10', 10, 'ND1000'],
+  ['Bright sun', '#ffe08a', '~9', 9, 'ND512'],
+  ['Hazy sun, light clouds', '#efd29c', '~8', 8, 'ND256'],
+  ['Overcast', '#b9c0c8', '~6–7', 6.5, 'ND64–ND128'],
+  ['Heavy overcast, open shade', '#7f8896', '~5–6', 5.5, 'ND32–ND64'],
+  ['Golden hour', '#e8954f', '~3–4', 3.5, 'ND8–ND16'],
+  ['Dusk, indoors, night', '#2c3a66', '0', 0, 'none'],
+];
+const ND_LABELS = [['ND2', '0.3', '1'], ['ND4', '0.6', '2'], ['ND8', '0.9', '3'], ['ND16', '1.2', '4'], ['ND32', '1.5', '5'], ['ND64', '1.8', '6'],
+  ['ND100', '2.0', '6.6'], ['ND128', '2.1', '7'], ['ND256', '2.4', '8'], ['ND512', '2.7', '9'], ['ND1000', '3.0', '10']];
+const GUIDES = [
+  ['🕶️', 'ND filter guide', 'Pocket 4 · D-Log', `
+    <p class="nd-lead">Camera: fixed <b>f/2</b> lens. Shoot <b>ISO 400</b> (or the lowest ISO D-Log allows), shutter <b>1/50 s</b> at 24 fps.</p>
+    <div class="nd">
+      <div class="nd-card">
+        <h3>📍 on location</h3>
+        <ol class="nd-steps">
+          <li><span><b>Lock settings:</b> ISO 400, shutter 1/50, white balance fixed.</span></li>
+          <li><span>Turn on the <b>histogram</b> (and zebras if available).</span></li>
+          <li><span>Put on the <b>starting ND</b> from the table.</span></li>
+          <li><span>Aim at the brightest thing you care about, usually the sky. If the histogram touches the right edge, or zebras show on the sky, go <b>one filter stronger</b>.</span></li>
+          <li><span>Between two filters, fine-tune with <b>shutter 1/40 to 1/100</b>. Motion blur still looks natural in that range.</span></li>
+          <li><span><b>Re-check</b> when the light changes (sun to shade, clouds moving in).</span></li>
+        </ol>
+        <div class="nd-rule">
+          <svg viewBox="0 0 76 40" aria-hidden="true" focusable="false">
+            <path d="M2 38C10 36 14 30 20 26S30 30 36 22S46 8 52 12S62 30 66 36L68 38Z" fill="#86b6ef" opacity=".55"/>
+            <path d="M2 38H74" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
+            <path d="M73 2V38" stroke="#ff4d4d" stroke-width="2" stroke-dasharray="3 2"/>
+          </svg>
+          <span><b>D-Log rule:</b> keep the sky just under the right edge of the histogram and let shadows sit a little dark. The LUT lifts midtones back up, but clipped highlights cannot be recovered.</span>
+        </div>
+      </div>
+      <div class="nd-card">
+        <h3>☀️ starting ND by light</h3>
+        <div class="nd-tw"><table class="nd-t">
+          <caption>f/2 · ISO 400 · 1/50</caption>
+          <thead><tr><th scope="col">Light</th><th scope="col">Stops to cut</th><th scope="col">ND</th></tr></thead>
+          <tbody>${ND_LIGHT.map(([l, c, s, n, nd]) => `<tr><td><i class="sw" style="--sw:${c}" aria-hidden="true"></i>${l}</td>
+            <td>${s}<span class="bar" style="--s:${n}" aria-hidden="true"></span></td><td><b>${nd}</b></td></tr>`).join('')}</tbody>
+        </table></div>
+        <p>These come from the <b>sunny-16 rule</b> adjusted for f/2. Treat them as a start point; they can be off by about <b>one stop</b>.</p>
+      </div>
+      <div class="nd-card">
+        <h3>🏷️ reading ND labels</h3>
+        <p class="nd-warn" role="note"><strong>⚠️ watch out</strong><q>ND2</q> means <b>1 stop</b>, but <q>ND 2.0</q> means <b>6.6 stops</b>.</p>
+        <div class="nd-tw"><table class="nd-t">
+          <caption>“ND” + factor = how many times darker · a decimal = optical density</caption>
+          <thead><tr><th scope="col">Factor label</th><th scope="col">Density label</th><th scope="col">Stops</th></tr></thead>
+          <tbody>${ND_LABELS.map(([f, d, s]) => `<tr${f === 'ND2' || f === 'ND100' ? ' class="hl"' : ''}><td><b>${f}</b></td><td>${d}</td>
+            <td>${s}<span class="bar" style="--s:${s}" aria-hidden="true"></span></td></tr>`).join('')}</tbody>
+        </table></div>
+      </div>
+      <div class="nd-card">
+        <h3>🎒 what to carry</h3>
+        <div class="nd-opts">
+          <div class="idea"><h3>2-stop-spaced set: ND16, ND64, ND256</h3><p>Shutter 1/40–1/100 covers the gap between filters.</p></div>
+          <div class="idea"><h3>or a variable ND (about 6–9 stops) + ND16</h3><p>The ND16 is for golden hour. Cheap variable NDs can show a dark X pattern or color cast at the strongest end.</p></div>
+        </div>
+      </div>
+      <div class="nd-card">
+        <h3>🎞️ worked example: walk clip 2026-10-24<small>DJI_20261024164540_0004</small></h3>
+        <dl class="nd-ex">
+          <dt>light</dt><dd>Overcast Seattle afternoon</dd>
+          <dt>settings</dt><dd>ISO 400, filter <b>“ND 2”</b></dd>
+          <dt>result</dt><dd>About <b>1 stop overexposed</b>; the sky clipped to pure white in 17–34% of the top third of bright frames.</dd>
+        </dl>
+        <div class="nd-opts">
+          <div class="idea"><h3>if it was ND 2.0 (6.6 stops) at 1/50</h3><p>That is about one stop short of what this light needed. Use <b>ND128 (2.1)</b> or <b>ND256</b> next time, or <b>ND100 with shutter 1/100</b>.</p></div>
+          <div class="idea"><h3>if it was ND2 (1 stop)</h3><p>The shutter must have been much faster than 1/50 to land only 1 stop over. Use <b>ND64–ND128 at 1/50</b> instead.</p></div>
+        </div>
+      </div>
+    </div>`],
+];
+
+// top-level tabs; every SHEET, SUBJECTS and GUIDES section must be listed in exactly one group
 const GROUPS = [
   ['📍', 'Places', ['food', 'temples & architecture', 'street & city', 'skyscrapers & city', 'trains & transit', 'landscape']],
   ['🌗', 'Light', ['night & neon', 'light & weather', 'shooting styles']],
   ['🧍', 'People', ['vlog & talking', 'people & human moments']],
-  ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves']],
+  ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves', 'ND filter guide']],
   ['🎬', 'Story', ['transitions', 'scene grammar']],
   ['💡', 'Subjects', SUBJECTS.map(([, t]) => t)],
 ];
@@ -698,7 +815,8 @@ const groupOf = Object.fromEntries(GROUPS.flatMap(([, g, ts], i) => ts.map(t => 
 document.getElementById('groups').innerHTML = GROUPS.map(([icon, g, ts], i) =>
   `<button role="tab" id="g-${slug(g)}" aria-selected="false" data-i="${i}"><span aria-hidden="true">${icon}</span>${g}</button>`).join('');
 document.getElementById('toc').innerHTML = [...SHEET, ...SUBJECTS].map(([icon, title, shots]) =>
-  `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('');
+  `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('')
+  + GUIDES.map(([icon, title]) => `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title}</a></li>`).join('');
 
 document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
@@ -707,7 +825,8 @@ document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) =>
       <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
     </div>`).join('')}</div></section>`).join('') + SUBJECTS.map(([icon, title, ideas]) => `
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${ideas.length} ideas</small></h2>
-    <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('');
+    <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('') + GUIDES.map(([icon, title, note, html]) => `
+  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${note}</small></h2>${html}</section>`).join('');
 
 // pause off-screen animations
 const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), {rootMargin: '100px 0px'});
