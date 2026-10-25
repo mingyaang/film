@@ -23,12 +23,6 @@
   h1 .grad{background:linear-gradient(92deg,#86b6ef,#d95926 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .sub{color:var(--ink-2);margin-top:8px;max-width:62ch}
 
-  /* general rules: a scannable list (one tip per row on phones, columns on wider screens) */
-  .rules{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));margin:20px 0 4px;
-         background:var(--surface);border:1px solid var(--ring);border-radius:14px;overflow:hidden}
-  .rules li{padding:9px 14px;font-size:13.5px;color:var(--ink-2);box-shadow:1px 0 0 var(--ring),0 1px 0 var(--ring)}
-  .rules b{color:var(--ink)}
-
   /* sticky jump nav: scrolls sideways on phones, wraps on desktop */
   .toc{position:sticky;top:0;z-index:20;margin:18px calc(-1 * var(--pad)) 0;padding:8px var(--pad);
        background:rgba(10,10,12,.82);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
@@ -290,18 +284,6 @@
 <div class="wrap">
   <h1>shot <span class="grad">cheat sheet</span> 🎬</h1>
   <p class="sub">camera moves for a travel montage. each frame loops the move; grid lines are the rule of thirds.</p>
-  <ul class="rules" aria-label="General rules">
-    <li><b>every place:</b> wide → medium → close → detail → odd angle</li>
-    <li><b>hold 2 s</b> still before and after each move</li>
-    <li><b>24 fps</b>, shutter 1/50 (2× frame rate)</li>
-    <li><b>slow-mo:</b> shoot 60/120 fps, play at 24</li>
-    <li><b>lock AE/AF</b> so exposure doesn't pump</li>
-    <li><b>cut on motion</b>, roughly to the beat</li>
-    <li><b>vlog bits:</b> 5–15 s, dropped between montage runs</li>
-    <li><b>Pocket 4 modes:</b> Follow = everyday · Tilt Locked = flat horizon · FPV = rolls with your hand</li>
-    <li><b>joystick pans</b> are smoother than turning your wrist</li>
-    <li><b>Pocket slow-mo:</b> 4K/240 = 10× at 24 · D-Log only if you'll color-grade</li>
-  </ul>
   <div class="roll" id="roll">
     <div class="roll-bar">
       <div><b>🎲 shot roulette</b><span>a random shot whose parts fit: subject, size, angle, move, and its job in the edit</span></div>
