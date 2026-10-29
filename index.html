@@ -67,6 +67,18 @@
   /* shot roulette: one random shot whose parts fit together */
   .roll{margin-top:16px;background:linear-gradient(135deg,rgba(134,182,239,.09),rgba(217,89,38,.09)),var(--surface);
         border:1px solid var(--ring);border-radius:16px;padding:12px 14px}
+  .ndtop{margin-top:16px;background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:14px 16px}
+  .ndtop > summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none}
+  .ndtop > summary::-webkit-details-marker{display:none}
+  .ndtop > summary b{display:block;font-size:16px} .ndtop > summary span{font-size:13px;color:var(--ink-2)}
+  .ndtop > summary i{flex:none;font-style:normal;font-size:13px;color:var(--muted);transition:transform .2s}
+  .ndtop[open] > summary i{transform:rotate(180deg)}
+  .ndtop > summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:8px}
+  .ndtop-body{margin-top:14px}
+  @media (max-width:560px){
+    .ndtop{padding:12px} .ndtop .nd-card{padding:12px 10px} .ndtop .nd-t{font-size:12.5px}
+    .ndtop .nd-t td:nth-child(3){white-space:normal} .ndtop .nd-t .bar{width:40px}
+  }
   .roll-bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
   .roll-bar b{display:block;font-size:16px}
   .roll-bar span{font-size:13px;color:var(--ink-2)}
@@ -284,6 +296,10 @@
 <div class="wrap">
   <h1>shot <span class="grad">cheat sheet</span> 🎬</h1>
   <p class="sub">camera moves for a travel montage. each frame loops the move; grid lines are the rule of thirds.</p>
+  <details class="ndtop" id="nd-filter-guide">
+    <summary><div><b>🕶️ ND filter guide</b><span>NEEWER ND2–32 / ND64–512 · which mark for which light, and the histogram check</span></div><i aria-hidden="true">▼</i></summary>
+    <div class="ndtop-body" id="nd-body"></div>
+  </details>
   <div class="roll" id="roll">
     <div class="roll-bar">
       <div><b>🎲 shot roulette</b><span>a random shot whose parts fit: subject, size, angle, move, and its job in the edit</span></div>
@@ -765,12 +781,12 @@ const GUIDES = [
     </div>`],
 ];
 
-// top-level tabs; every SHEET, SUBJECTS and GUIDES section must be listed in exactly one group
+// top-level tabs; every SHEET and SUBJECTS section must be listed in exactly one group
 const GROUPS = [
   ['📍', 'Places', ['food', 'temples & architecture', 'street & city', 'skyscrapers & city', 'trains & transit', 'landscape']],
   ['🌗', 'Light', ['night & neon', 'light & weather', 'shooting styles']],
   ['🧍', 'People', ['vlog & talking', 'people & human moments']],
-  ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves', 'ND filter guide']],
+  ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves']],
   ['🎬', 'Story', ['transitions', 'scene grammar']],
   ['💡', 'Subjects', SUBJECTS.map(([, t]) => t)],
 ];
@@ -778,8 +794,7 @@ const groupOf = Object.fromEntries(GROUPS.flatMap(([, g, ts], i) => ts.map(t => 
 document.getElementById('groups').innerHTML = GROUPS.map(([icon, g, ts], i) =>
   `<button role="tab" id="g-${slug(g)}" aria-selected="false" data-i="${i}"><span aria-hidden="true">${icon}</span>${g}</button>`).join('');
 document.getElementById('toc').innerHTML = [...SHEET, ...SUBJECTS].map(([icon, title, shots]) =>
-  `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('')
-  + GUIDES.map(([icon, title]) => `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title}</a></li>`).join('');
+  `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('');
 
 document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
@@ -788,8 +803,8 @@ document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) =>
       <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
     </div>`).join('')}</div></section>`).join('') + SUBJECTS.map(([icon, title, ideas]) => `
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${ideas.length} ideas</small></h2>
-    <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('') + GUIDES.map(([icon, title, note, html]) => `
-  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${note}</small></h2>${html}</section>`).join('');
+    <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('');
+document.getElementById('nd-body').innerHTML = GUIDES[0][3];
 
 // pause off-screen animations
 const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), {rootMargin: '100px 0px'});
@@ -995,6 +1010,7 @@ document.getElementById('groups').addEventListener('click', e => {
 const fromHash = () => {
   const h = decodeURIComponent(location.hash.slice(1)), gi = GROUPS.findIndex(([, g]) => slug(g) === h);
   if (gi >= 0) return showGroup(gi);
+  if (h === 'nd-filter-guide') { const d = document.getElementById(h); d.open = true; d.scrollIntoView(); return showGroup(0); }
   if (h in groupOf) { showGroup(groupOf[h]); document.getElementById(h).scrollIntoView(); return; }
   showGroup(0);
 };
