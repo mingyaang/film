@@ -709,7 +709,7 @@ const SUBJECTS = [
 // reference guides: [icon, section, h2 note, html]. Numbers come from ND_GUIDE.md; keep them in sync.
 // light rows: [light, swatch, stops label, stops for the bar, ND]; label rows: [factor, density, stops]
 const ND_LIGHT = [
-  ['Bright sun, beach or snow', '#fff6d8', '~10', 10, 'ND64–512', '512 + 1/100'],
+  ['Bright sun, beach or snow', '#fff6d8', '~10', 10, 'ND64–512', '512 (max)'],
   ['Bright sun', '#ffe08a', '~9', 9, 'ND64–512', '512'],
   ['Hazy sun, light clouds', '#efd29c', '~8', 8, 'ND64–512', '256'],
   ['Overcast', '#b9c0c8', '~6–7', 6.5, 'ND64–512', '64–128'],
@@ -720,7 +720,7 @@ const ND_LIGHT = [
 const ND_MARKS = [['2', 1], ['4', 2], ['8', 3], ['16', 4], ['32', 5], ['64', 6], ['128', 7], ['256', 8], ['512', 9]];
 const GUIDES = [
   ['🕶️', 'ND filter guide', 'NEEWER variable ND · Pocket 4', `
-    <p class="nd-lead">Two NEEWER variable NDs: <b>ND2–32</b> (1–5 stops) and <b>ND64–512</b> (6–9 stops). Each mark on the ring is one stop. Table assumes <b>f/2 · ISO 400 · 1/50</b>.</p>
+    <p class="nd-lead">Two NEEWER variable NDs: <b>ND2–32</b> (1–5 stops) and <b>ND64–512</b> (6–9 stops). Each mark on the ring is one stop. Settings stay locked at <b>f/2 · ISO 400 · 1/50 · 24 fps</b>, so the ring is your only exposure control.</p>
     <div class="nd">
       <div class="nd-card">
         <h3>☀️ which filter, which mark</h3>
@@ -738,7 +738,7 @@ const GUIDES = [
           <li><span>Aim at the brightest thing you care about, usually the sky.</span></li>
           <li><span>Touching the right edge? Turn the ring <b>one mark stronger</b>. Big gap on the right? One mark weaker.</span></li>
           <li><span>At the end of a filter's range, <b>swap filters</b>: past 32 → ND64–512 at 64; under 64 → ND2–32 at 32.</span></li>
-          <li><span>Past 512 and still clipping: shutter <b>1/100</b>.</span></li>
+          <li><span>Still clipping at 512 (beach, snow): you are out of ND. Frame less sky and let shadows go darker.</span></li>
         </ol>
         <div class="nd-rule">
           <svg viewBox="0 0 76 40" aria-hidden="true" focusable="false">
@@ -756,7 +756,7 @@ const GUIDES = [
           <tbody>${ND_MARKS.map(([m, s]) => `<tr><td><b>${m}</b></td>
             <td>${s}<span class="bar" style="--s:${s}" aria-hidden="true"></span></td><td>${s <= 5 ? 'ND2–32' : 'ND64–512'}</td></tr>`).join('')}</tbody>
         </table></div>
-        <p>The two filters meet at 32 → 64, so there is no gap. If a <b>dark X</b> shows near 512, back off to 256 and use shutter 1/100.</p>
+        <p>The two filters meet at 32 → 64, so there is no gap. If a <b>dark X</b> shows near 512, turn back one mark until it goes away.</p>
       </div>
       <div class="nd-card">
         <h3>🎞️ last time: walk clip 2026-10-24<small>DJI_20261024164540_0004</small></h3>
