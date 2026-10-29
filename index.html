@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a0a0c">
 <meta name="color-scheme" content="dark">
-<title>ND filter guide 🕶️</title>
+<title>shot cheat sheet 🎬</title>
 <style>
   :root{--plane:#0a0a0c;--surface:#16161b;--surface-2:#1f1f26;--ink:#fff;--ink-2:#c3c2b7;--muted:#9a988f;--ring:rgba(255,255,255,.10);--ring-2:rgba(255,255,255,.22);
          --accent:#86b6ef;--accent-2:#d95926;--rec:#ff4d4d;--pad:clamp(16px,3vw,40px);--nav-h:120px;color-scheme:dark}
@@ -22,15 +22,224 @@
   h1{font-size:clamp(30px,5.5vw,52px);font-weight:800;letter-spacing:-.03em;line-height:1.02}
   h1 .grad{background:linear-gradient(92deg,#86b6ef,#d95926 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .sub{color:var(--ink-2);margin-top:8px;max-width:62ch}
+
+  /* sticky jump nav: scrolls sideways on phones, wraps on desktop */
+  .toc{position:sticky;top:0;z-index:20;margin:18px calc(-1 * var(--pad)) 0;padding:8px var(--pad);
+       background:rgba(10,10,12,.82);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+       border-bottom:1px solid var(--ring)}
+  .toc ul{position:relative;list-style:none;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+          max-width:1180px;margin:0 auto;padding-right:28px;mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+  .toc ul::-webkit-scrollbar{display:none}
+  .toc a{display:flex;align-items:center;gap:6px;white-space:nowrap;min-height:36px;padding:0 12px;border-radius:999px;
+         font-size:13.5px;font-weight:600;color:var(--ink-2);text-decoration:none;background:var(--surface);border:1px solid var(--ring)}
+  .toc a small{font-weight:500;color:var(--muted);font-size:12px}
+  .toc a:hover{border-color:var(--ring-2);color:var(--ink)}
+  .toc a[aria-current="true"]{background:var(--ink);color:var(--plane);border-color:var(--ink)}
+  .toc a[aria-current="true"] small{color:#55534d}
+  @media (min-width:900px){.toc ul{flex-wrap:wrap;padding-right:0;mask-image:none}}
+  /* top-level tabs: 5 groups, each filters the page to its own sections */
+  .groups{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;max-width:1180px;margin:0 auto 8px;padding:3px;
+          background:var(--surface);border:1px solid var(--ring);border-radius:12px}
+  .groups button{display:flex;flex-direction:column;align-items:center;gap:1px;min-height:44px;padding:4px 2px;border:0;border-radius:9px;
+                 background:none;color:var(--ink-2);font:600 11.5px/1.15 inherit;cursor:pointer;min-width:0}
+  .groups button span{font-size:17px}
+  .groups button:hover{color:var(--ink);background:var(--surface-2)}
+  .groups button[aria-selected="true"]{background:var(--ink);color:var(--plane)}
+  .groups button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  @media (min-width:700px){.groups button{flex-direction:row;justify-content:center;gap:7px;font-size:14px}}
+  section[hidden]{display:none}
+  /* subject ideas: text cards, no animation */
   .ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px}
   .idea{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:12px 14px}
   .idea h3{font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:3px}
   .idea p{font-size:13.5px;color:var(--ink-2)}
+  a:focus-visible,.vf:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
   section{margin-top:40px}
   h2{display:flex;align-items:center;gap:10px;font-size:clamp(19px,2.4vw,22px);font-weight:750;letter-spacing:-.01em;margin-bottom:14px}
   h2 i{font-style:normal;font-size:1.15em}
   h2 small{font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0}
   h2::after{content:"";flex:1;height:1px;background:var(--ring);margin-left:4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:14px}
+  .tile{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--ring);border-radius:16px;padding:10px 10px 14px}
+  .tile h3{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:12px 4px 4px}
+  .tile p{font-size:14px;color:var(--ink-2);margin:0 4px 10px;max-width:60ch}
+  /* shot roulette: one random shot whose parts fit together */
+  .roll{margin-top:16px;background:linear-gradient(135deg,rgba(134,182,239,.09),rgba(217,89,38,.09)),var(--surface);
+        border:1px solid var(--ring);border-radius:16px;padding:12px 14px}
+  .roll-bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .roll-bar b{display:block;font-size:16px}
+  .roll-bar span{font-size:13px;color:var(--ink-2)}
+  .roll button{min-height:40px;padding:0 16px;border-radius:999px;border:0;background:var(--ink);color:var(--plane);
+               font:700 14px/1 inherit;cursor:pointer;white-space:nowrap}
+  .roll button.alt{background:var(--surface-2);color:var(--ink);border:1px solid var(--ring-2)}
+  .roll button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .roll-card{display:grid;gap:14px;margin-top:12px}
+  @media (min-width:760px){.roll-card{grid-template-columns:minmax(260px,400px) 1fr;align-items:start}}
+  .roll .role{font-size:12px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:#f08a5d}
+  .roll .role small{display:block;margin-top:2px;font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+  .roll h3{font-size:clamp(18px,2.4vw,22px);font-weight:750;letter-spacing:-.01em;margin:8px 0 10px;line-height:1.2}
+  .roll dl{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13.5px}
+  .roll dt{color:var(--muted)} .roll dd{color:var(--ink-2)} .roll dd b{color:var(--ink)}
+  .roll dd a{color:var(--accent);text-decoration:none;white-space:nowrap} .roll dd a:hover{text-decoration:underline}
+  .roll .do{margin-top:10px;font-size:14px;color:var(--ink)}
+  .roll .set{display:inline-block;margin-top:8px}
+  .roll-btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .tile .set,.roll .set{align-self:flex-start;margin:auto 4px 0;font-size:12.5px;color:var(--accent);background:rgba(134,182,239,.10);
+             border:1px solid rgba(134,182,239,.16);border-radius:8px;padding:3px 8px}
+
+  /* viewfinder: scene layers inside a clipped 16:9 frame; sizes in cqw so subjects scale with the tile.
+     Subjects are inline-SVG symbols (subject library in the script). People take their colors from --p (top),
+     --pd (sleeves, legs, far side), --h (skin) and --hair, so .you / .pal recolor one drawing. */
+  .vf{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:10px;container-type:inline-size;
+      --p:#596273;--pd:#454d5c;--h:#cdb6a2;--hair:#24212a;--car:#b9c2d0;
+      --ease:cubic-bezier(.65,0,.35,1)}
+  .s,.L,.k{position:absolute;inset:0}
+  .it{position:absolute;display:block;overflow:visible}
+  .rect{position:absolute}
+  .you{--p:#e0703f;--pd:#b5532a;--h:#efc29f}
+  .pal{--p:#4f8bd6;--pd:#3768a8;--h:#efc29f}
+  .pald{--p:#2d4a70;--pd:#22395a;--h:#b98f72;--hair:#14121a}
+  .alt{--p:#7b6a86;--pd:#5e5068}
+  .c3{--p:#c2412d;--pd:#962c1d} .c4{--p:#e3b23c;--pd:#b5871f}
+  .taxi{--car:#f0b43c}
+  .sil{--p:#0b0907;--pd:#0b0907;--h:#0b0907;--hair:#0b0907}
+  .flip{transform:scaleY(-1);opacity:.45}
+  .ghost{opacity:.35}
+  .up1{rotate:135deg} .up2{rotate:-135deg} .up3{rotate:45deg} .up4{rotate:-45deg}
+  .vf::before{ /* rule of thirds */
+    content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+    background:linear-gradient(90deg,transparent 33.2%,rgba(255,255,255,.18) 33.3% 33.5%,transparent 33.6% 66.5%,rgba(255,255,255,.18) 66.6% 66.8%,transparent 66.9%),
+               linear-gradient(transparent 33.2%,rgba(255,255,255,.18) 33.3% 33.6%,transparent 33.7% 66.4%,rgba(255,255,255,.18) 66.5% 66.8%,transparent 66.9%)
+  }
+  .tag{position:absolute;z-index:6;left:8px;top:7px;font:700 10px/1 ui-monospace,monospace;letter-spacing:.08em;color:#fff;
+       background:rgba(0,0,0,.62);padding:4px 6px;border-radius:5px}
+  .tag::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rec);margin-right:5px;
+       vertical-align:1px;animation:blink 1.2s steps(2) infinite}
+
+  @keyframes blink{50%{opacity:0}}
+  /* Camera moves. Each one eases (--ease) and holds still at both ends like a real take: settle, move, settle.
+     Moves that travel through space give each depth layer its own rate (--z zoom, --d / --x / --y shift): the
+     near layer (f) moves most and the far layer (b) least, which is what sells depth. Transforms and opacity only;
+     blur comes from pre-blurred copies that crossfade, never from an animated filter. */
+  @keyframes dolly{0%,18%{transform:none}82%,100%{transform:scale(var(--z))}}
+  @keyframes dollyout{0%,18%{transform:scale(var(--z))}82%,100%{transform:none}}
+  @keyframes tilt{0%,16%{transform:scale(1.35) translateY(-12%)}84%,100%{transform:scale(1.35) translateY(12%)}}
+  @keyframes ped{0%,16%{transform:none}84%,100%{transform:translateY(var(--y))}}
+  @keyframes truck{0%,16%{transform:translateX(var(--d))}84%,100%{transform:translateX(calc(-1 * var(--d)))}}
+  @keyframes slideoff{0%,18%{transform:none}82%,100%{transform:translateX(var(--x))}}
+  @keyframes spin{0%,16%{transform:scale(1.6) rotate(0)}84%,100%{transform:scale(1.6) rotate(180deg)}} /* scale hides the corners */
+  @keyframes hyper{from{transform:none}to{transform:scale(var(--z))}}
+  @keyframes jitter{0%{transform:scale(1.04)}25%{transform:scale(1.04) translate(.6%,-.4%) rotate(.3deg)}
+                    50%{transform:scale(1.04) translate(-.5%,.3%) rotate(-.2deg)}75%{transform:scale(1.04) translate(.4%,.5%) rotate(.15deg)}}
+  @keyframes breath{to{transform:scale(1.025)}} /* lenses "breathe" a little while focus moves */
+  @keyframes creep{to{transform:scale(1.07)}}  /* each shot of a cut pair drifts in, like live footage */
+  @keyframes focus-out{0%,26%{opacity:1}74%,100%{opacity:0}}
+  @keyframes focus-in{0%,26%{opacity:0}74%,100%{opacity:1}}
+  @keyframes whipout{0%,38%{transform:none;animation-timing-function:cubic-bezier(.6,0,1,.6)}50%,100%{transform:translateX(-125%)}}
+  @keyframes whipin{0%,50%{transform:translateX(125%);animation-timing-function:cubic-bezier(0,.4,.4,1)}62%,100%{transform:none}}
+  @keyframes smear-on{0%,41%{opacity:0}47%,100%{opacity:1}}
+  @keyframes smear-off{0%,41%{opacity:1}47%,100%{opacity:0}}
+  @keyframes clear-on{0%,53%{opacity:0}60%,100%{opacity:1}}
+  @keyframes clear-off{0%,53%{opacity:1}60%,100%{opacity:0}}
+  @keyframes cutA{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+  @keyframes cutB{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+  @keyframes wipebar{0%,36%{transform:translateX(-115%)}50%{transform:none}64%,100%{transform:translateX(115%)}}
+  /* subject moves: the camera stays locked and only the subject travels */
+  @keyframes handin{0%,22%{transform:translate(45%,-70%)}72%,100%{transform:none}}
+  @keyframes walkby{0%,12%{transform:translateX(-90%)}88%,100%{transform:translateX(90%)}}
+  @keyframes passby{0%,34%{transform:translateX(-135%)}66%,100%{transform:translateX(135%)}}
+  @keyframes cross{from{transform:translateX(-75%)}to{transform:translateX(75%)}}
+  @keyframes stream{to{transform:translateX(-60%)}} /* items repeat every 60% -> seamless loop */
+  @keyframes drift{from{transform:translateX(var(--d))}to{transform:translateX(calc(-1 * var(--d)))}}
+  @keyframes walkin{0%{transform:scale(.3);opacity:0}8%{transform:scale(.3);opacity:1;animation-timing-function:cubic-bezier(.5,0,.9,.7)}
+                    78%{transform:none}92%{opacity:1}100%{transform:none;opacity:0}}
+  @keyframes walkout{0%{transform:none;opacity:0}6%,20%{transform:none;opacity:1;animation-timing-function:cubic-bezier(.1,.3,.5,1)}
+                     88%{transform:scale(.22);opacity:1}100%{transform:scale(.22);opacity:0}}
+  /* subject life: small idle motion so even static frames read as video */
+  @keyframes step{50%{translate:0 -3.5%}}
+  @keyframes breathe{50%{scale:1 1.018}}
+  @keyframes nod{30%{rotate:-2deg}65%{rotate:1.5deg}}
+  @keyframes work{50%{rotate:-4deg;translate:-2% 0}}
+  @keyframes rise{0%{translate:0 8%;scale:.85;opacity:0}35%{opacity:.95}100%{translate:0 -16%;scale:1.15;opacity:0}}
+  @keyframes sway{0%,100%{rotate:-4deg}50%{rotate:4deg}}
+  @keyframes flick{0%,90%,94%,97%,100%{opacity:1}92%{opacity:.35}95.5%{opacity:.6}}
+  @keyframes glow{50%{opacity:.55}}
+  @keyframes ripple{50%{scale:1.04 1}}
+
+  /* push / pull: a real dolly, so near layers grow faster than far ones */
+  .m-push .L{animation:dolly 7s var(--ease) infinite alternate}
+  .m-push .b{--z:1.1} .m-push .m{--z:1.32} .m-push .f{--z:1.65}
+  .m-pull .L{animation:dollyout 7s var(--ease) infinite alternate}
+  .m-pull .b{--z:1.45} .m-pull .m{--z:2.3} .m-pull .f{--z:2.8}
+  .m-lead .b{--z:1.55;animation:dollyout 7s var(--ease) infinite alternate} /* camera backs away ahead of them: the place recedes */
+  .m-hyper .L{animation:hyper 5s steps(10) infinite} .m-hyper .b{--z:1.25} .m-hyper .m{--z:1.6}
+  .m-hyper .s{animation:jitter 2s steps(1) infinite}
+  /* tilt and pan rotate the camera, so the frame moves as one; pedestal and truck move it, so layers separate */
+  .m-tilt .s{animation:tilt 8s var(--ease) infinite alternate}
+  .m-pan .b{--d:15%;animation:truck 10s var(--ease) infinite alternate}
+  .m-rise .L{animation:ped 8s var(--ease) infinite alternate} .m-rise .b{--y:5%} .m-rise .m{--y:9%} .m-rise .f{--y:62%}
+  .m-parallax .L{animation:truck 8s var(--ease) infinite alternate}
+  .m-parallax .b{--d:2%} .m-parallax .m{--d:8%} .m-parallax .f{--d:30%}
+  .m-reveal .L{animation:slideoff 7s var(--ease) infinite alternate}
+  .m-reveal .b{--x:-3%} .m-reveal .m{--x:-9%} .m-reveal .f{--x:-112%}
+  .m-orbit .L{animation:truck 7s var(--ease) infinite alternate} .m-orbit .b{--d:26%} .m-orbit .m{--d:-3%}
+  .m-dolly .b{--z:2;animation:dolly 7s var(--ease) infinite alternate} /* subject holds its size, background swells */
+  .m-spin .s{animation:spin 9s var(--ease) infinite alternate}
+  .m-dutch .s{transform:rotate(-14deg) scale(1.42)} /* 1.42 = cos14 + 16/9*sin14, so the ground's edges never show */
+  /* moving camera, constant speed: walking and train windows don't ease */
+  .m-follow .b{animation:stream 4s linear infinite}
+  .m-window .b{--d:2%;animation:drift 10s ease-in-out infinite alternate}
+  .m-window .m{animation:stream 4s linear infinite}
+  .m-window .f{animation:stream .9s linear infinite;filter:url(#mb)}
+  /* focus: sharp and pre-blurred copies trade places */
+  .m-rack .s{animation:breath 6s var(--ease) infinite alternate}
+  .m-rack .soft{filter:blur(4.5px)}
+  .m-rack .f .k:not(.soft),.m-rack .b .soft{animation:focus-out 6s var(--ease) infinite alternate}
+  .m-rack .f .soft,.m-rack .b .k:not(.soft){animation:focus-in 6s var(--ease) infinite alternate}
+  /* whip: the shot accelerates out, a motion-blurred copy takes over mid-swing, the next shot decelerates in */
+  .m-whip .smear{filter:url(#mb2)}
+  .m-whip .m{animation:whipout 5s linear infinite} .m-whip .f{animation:whipin 5s linear infinite}
+  .m-whip .m .k:not(.smear){animation:smear-off 5s linear infinite} .m-whip .m .smear{animation:smear-on 5s linear infinite}
+  .m-whip .f .k:not(.smear){animation:clear-on 5s linear infinite} .m-whip .f .smear{animation:clear-off 5s linear infinite}
+  /* cuts */
+  .m-match .m,.m-wipe .m,.m-jumpcut .m,.m-eyeline .m{animation:cutA 5s linear infinite}
+  .m-match .f,.m-wipe .f,.m-jumpcut .f,.m-eyeline .f{animation:cutB 5s linear infinite}
+  .m-match .s,.m-wipe .s,.m-eyeline .s{animation:creep 2.5s linear infinite}
+  .m-wipe .x{animation:wipebar 5s linear infinite;filter:url(#mb)}
+  /* locked-off camera: only the subject moves */
+  .m-topdown .f,.m-reach .f{animation:handin 5s var(--ease) infinite alternate}
+  .m-lockoff .f{animation:walkby 8s linear infinite}
+  .m-pass .f{animation:passby 4.5s linear infinite;filter:url(#mb)}
+  .m-crowd .m{animation:cross 4s linear infinite}
+  .m-crowd .f{animation:cross 2.2s linear infinite;filter:url(#mb)}
+  .m-timelapse .m{animation:cross 3s linear infinite;filter:url(#mb2)}
+  .m-approach .f{transform-origin:50% 70%;animation:walkin 7s linear infinite}
+  .m-exit .f{transform-origin:50% 70%;animation:walkout 7s linear infinite}
+  /* subject life, set per symbol (IDLE in the script) or per item */
+  .breathe{transform-origin:50% 100%;animation:breathe 3.6s ease-in-out infinite}
+  .talk{transform-origin:50% 95%;animation:nod 2.6s ease-in-out infinite}
+  .work{transform-origin:50% 100%;animation:work 1.8s ease-in-out infinite}
+  .steam{animation:rise 2.8s linear infinite}
+  .sway{transform-origin:50% 0;animation:sway 3.4s ease-in-out infinite}
+  .flick{animation:flick 4.2s linear infinite}
+  .glow{animation:glow 3s ease-in-out infinite}
+  .walk{transform-origin:50% 100%;animation:step .56s ease-in-out infinite}
+  .it.flip{animation:ripple 2.4s ease-in-out infinite}
+  .it:nth-child(2n){animation-delay:-.3s} .it:nth-child(3n){animation-delay:-1.1s} /* people don't move in lockstep */
+
+  /* pause tiles that are off-screen (set by JS) — saves battery on long phone scrolls */
+  .vf.off *,.vf.off .tag::before{animation-play-state:paused!important}
+  /* reduced motion: frames hold still; hover or tap a frame to play it */
+  @media (prefers-reduced-motion:reduce){
+    .vf *,.vf .tag::before{animation-play-state:paused!important}
+    .tile:hover .vf:not(.off) *,.vf.play:not(.off) *{animation-play-state:running!important}
+    .vf{cursor:pointer}
+    .vf::after{content:"▶ tap to play";position:absolute;z-index:6;right:8px;bottom:7px;font:600 10px/1 system-ui,sans-serif;
+               color:#fff;background:rgba(0,0,0,.62);padding:4px 6px;border-radius:5px}
+    .vf.play::after{content:"❚❚ pause"}
+  }
+
   /* ND filter guide: reference cards with tables; one column on phones, two on wide screens */
   .nd-lead{font-size:14px;color:var(--ink-2);margin:-4px 0 14px;max-width:70ch} .nd-lead b{color:var(--ink)}
   .nd{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:14px;align-items:start}
@@ -73,35 +282,463 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>ND filter <span class="grad">guide</span> 🕶️</h1>
-  <p class="sub">Pocket 4 · D-Log. Which ND to use for each kind of light, and how to read filter labels.</p>
-  <section id="nd"></section>
+  <h1>shot <span class="grad">cheat sheet</span> 🎬</h1>
+  <p class="sub">camera moves for a travel montage. each frame loops the move; grid lines are the rule of thirds.</p>
+  <div class="roll" id="roll">
+    <div class="roll-bar">
+      <div><b>🎲 shot roulette</b><span>a random shot whose parts fit: subject, size, angle, move, and its job in the edit</span></div>
+      <button id="roll-go">🎲 Roll</button>
+    </div>
+    <div id="roll-out" aria-live="polite"></div>
+  </div>
+  <nav class="toc" aria-label="Shot categories"><div class="groups" id="groups" role="tablist"></div><ul id="toc"></ul></nav>
+  <div id="sheet"></div>
 </div>
-<script>
-const ND_LIGHT = [
-  ['Bright sun, beach or snow', '#fff6d8', '~10', 10, 'ND1000'],
-  ['Bright sun', '#ffe08a', '~9', 9, 'ND512'],
-  ['Hazy sun, light clouds', '#efd29c', '~8', 8, 'ND256'],
-  ['Overcast', '#b9c0c8', '~6–7', 6.5, 'ND64–ND128'],
-  ['Heavy overcast, open shade', '#7f8896', '~5–6', 5.5, 'ND32–ND64'],
-  ['Golden hour', '#e8954f', '~3–4', 3.5, 'ND8–ND16'],
-  ['Dusk, indoors, night', '#2c3a66', '0', 0, 'none'],
-];
-const ND_LABELS = [['ND2', '0.3', '1'], ['ND4', '0.6', '2'], ['ND8', '0.9', '3'], ['ND16', '1.2', '4'], ['ND32', '1.5', '5'], ['ND64', '1.8', '6'],
-  ['ND100', '2.0', '6.6'], ['ND128', '2.1', '7'], ['ND256', '2.4', '8'], ['ND512', '2.7', '9'], ['ND1000', '3.0', '10']];
 
-document.getElementById('nd').innerHTML = `
-    <p class="nd-lead">Camera: fixed <b>f/2</b> lens. Shoot <b>ISO 400</b> (or the lowest ISO D-Log allows), shutter <b>1/50 s</b> at 24 fps.</p>
+<script>
+// Item: [glyph, x%, y%, size cqw, cls?]; rect: ['#color', x%, y%, w%, h%] (top-left anchored).
+// Layers draw b -> m -> f -> x. Repeating 'stream' layers place items every 60% so the loop is seamless.
+const SHEET = [
+  ['🍜', 'food', [
+    {n:'overhead hands-in', mv:'topdown', sky:'#3b2416,#1d120b', L:{b:[['#5a3a22',8,10,84,80]], m:[['bowltop',50,52,34]], f:[['chop',63,32,24]]},
+     how:'Phone flat above the table, locked. Let hands or chopsticks enter and leave the frame.', set:'AE/AF lock · 4–6 s'},
+    {n:'push-in on steam', mv:'push', sky:'#2a1a10,#120b06', L:{m:[['bowl',50,62,30]], f:[['steam',50,26,14]]},
+     how:'Slow move toward the bowl while steam rises. Backlight makes steam visible.', set:'60 fps, play at 24'},
+    {n:'rack focus', mv:'rack', sky:'#3a2318,#1a100a', L:{b:[['skewer',66,52,22]], f:[['lantern',22,40,34]]},
+     how:'Something close in the foreground, the dish behind. Shift focus between them mid-shot.', set:'tap-to-focus or Cinematic mode'},
+  ]],
+  ['⛩️', 'temples & architecture', [
+    {n:'tilt-up reveal', mv:'tilt', sky:'#6b8fc9,#f2b68a', L:{b:[['#7a6a5a',0,70,100,30]], m:[['torii',50,40,44]], f:[['rock',30,86,10],['rock',70,88,8]]},
+     how:'Start on the steps or ground, tilt slowly up to the gate.', set:'5–8 s for the move'},
+    {n:'foreground reveal', mv:'reveal', sky:'#86a9d6,#e9c9a0', L:{b:[['#6f7f58',-10,74,120,26]], m:[['pagoda',50,46,46]], f:[['#1b120c',0,0,70,100]]},
+     how:'Start hidden behind a pillar or tree, slide sideways to reveal the building.', set:'move from the hips · gimbal helps'},
+    {n:'symmetry lock-off', mv:'lockoff', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28]], m:[['gate',50,46,44]], f:[['walk',50,74,14]]},
+     how:'Dead center on a tripod or wall. Let people walk through the frame.', set:'1/50 s · ND filter in daylight'},
+  ]],
+  ['🏙️', 'street & city', [
+    {n:'follow walk', mv:'follow', sky:'#9ec5e8,#e8d6b8',
+     L:{b:[['#6d6a66',-20,72,240,28],['shop',-10,50,26],['tower',20,46,30],['shop',50,50,26],['tower',80,46,30],['shop',110,50,26],['tower',140,46,30]], m:[['walk',42,70,22,'pal']]},
+     how:'Walk beside or behind a companion at their pace. Keep them in the same spot of the frame.', set:'bent knees, heel-to-toe'},
+    {n:'low-angle crowd', mv:'crowd', sky:'#a9c8e6,#d9c7ad', L:{b:[['#5d5a57',0,82,100,18],['tower',50,40,40]], m:[['walk',35,66,22,'alt']], f:[['walk',60,70,36]]},
+     how:'Camera near the ground. Let the crowd stream past the lens.', set:'0.5× wide · 1/25–1/50 for blur'},
+    {n:'hyperlapse', mv:'hyper', sky:'#87b3e0,#f0d2b0', L:{b:[['#6d6a66',0,78,100,22]], m:[['tvtower',50,48,40]]},
+     how:'Pick a fixed point. One step, one photo, ~150 times, keeping the point centered.', set:'Hyperlapse mode or stabilize in post'},
+  ]],
+  ['🌆', 'skyscrapers & city', [
+    {n:'tower tilt-up', mv:'tilt', sky:'#4f86c6,#bcd6ef', L:{b:[['#5d5a57',0,82,100,18]], m:[['tower',50,40,56]], f:[['walk',30,86,10]]},
+     how:'Stand at the base. Start on the entrance or street, tilt up the facade to the sky. Slower than feels right.', set:'Follow mode · joystick up · 6–8 s'},
+    {n:'corner reveal', mv:'reveal', sky:'#7aa4d8,#d9c7ad', L:{b:[['#5d5a57',-10,76,120,24]], m:[['city',50,50,46]], f:[['#2a2622',0,0,70,100]]},
+     how:'Start tight on a wall, walk around the corner so the skyline or a big crossing opens up.', set:'Tilt Locked · walk slow'},
+    {n:'observation deck pan', mv:'pan', sky:'#1c2a55,#e98a5a',
+     L:{b:[['#141a30',-20,72,140,28],['tower',-8,60,22],['city',18,58,26],['tvtower',45,50,30],['tower',70,60,22],['city',95,58,26],['tower',115,60,22]]},
+     how:'Lens pressed to the glass, pan slowly across the skyline. Go at blue hour, ~20 min after sunset.', set:'dark cloth or hand on the glass · AE lock'},
+    {n:'crossing from above', mv:'timelapse', sky:'#4a4d52,#3a3d42',
+     L:{b:[['#e8e8e8',10,20,6,60],['#e8e8e8',26,20,6,60],['#e8e8e8',42,20,6,60],['#e8e8e8',58,20,6,60],['#e8e8e8',74,20,6,60],['#e8e8e8',90,20,6,60]],
+        m:[['top',20,35,10],['top',45,55,10,'alt'],['top',70,40,10],['top',35,70,10,'pal']]},
+     how:'From a café or deck above a busy crossing, lock off looking down. Roll through a full light cycle, or timelapse it.', set:'ledge or mini tripod · Timelapse mode'},
+    {n:'light trails', mv:'timelapse', sky:'#0b0f22,#1c1838', L:{b:[['city',50,36,40],['#22252c',0,66,100,34]], m:[['car',20,74,10],['car',60,82,10,'taxi'],['car',85,74,10]]},
+     how:'Locked off above a busy road at night. A timelapse turns traffic into streams of light.', set:'tripod · Timelapse/Motionlapse'},
+    {n:'frame in a frame', mv:'still', sky:'#6a96d0,#d6e4f2', L:{b:[['tower',50,50,40]], f:[['#1e1b18',0,0,32,100],['#1e1b18',68,0,32,100]]},
+     how:'Shoot the tower through a gap: an alley, under a bridge, between two buildings. Dark edges point at the subject.', set:'subject centered in the gap'},
+  ]],
+  ['🚄', 'trains & transit', [
+    {n:'window parallax', mv:'window', sky:'#bcd7f0,#e6eef5',
+     L:{b:[['mountain',55,40,34]], m:[['#7fae6f',-20,62,240,40],['tree',10,62,14],['tree',40,64,12],['tree',70,62,14],['tree',100,64,12],['tree',130,62,14]],
+        f:[['#2a2e35',10,0,4,100],['#2a2e35',70,0,4,100],['#2a2e35',130,0,4,100]]},
+     how:'Shoot out the window. Near things streak, far things drift.', set:'lens on the glass, hand over it to kill reflections'},
+    {n:'platform pass-by', mv:'pass', sky:'#c9d6e2,#9aa8b5', L:{b:[['#d8c23a',0,78,100,3],['#55595f',0,81,100,19]], f:[['train',50,56,60]]},
+     how:'Locked off behind the yellow line. Let the train blast through.', set:'1/15–1/30, braced, for streaks'},
+    {n:'detail cutaway', mv:'push', sky:'#3b3f4a,#23262d', L:{m:[['bento',38,56,26]], f:[['ticket',70,46,18]]},
+     how:'Close-ups of tickets, bento, the seat-back view. Cut these between wides.', set:'2× or macro · ~3 s each'},
+  ]],
+  ['🏔️', 'landscape', [
+    {n:'foreground slide', mv:'parallax', sky:'#5a7fc4,#ffb37a', L:{b:[['mountain',50,48,44]], m:[['#557a4a',-20,70,140,30]], f:[['grass',10,80,24],['grass',60,84,26],['grass',100,80,24]]},
+     how:'Slow pan or side-step with grass or a branch close to the lens for depth.', set:'slow: 6–10 s'},
+    {n:'cloud timelapse', mv:'timelapse', sky:'#3f6fb8,#9cc3ea', L:{b:[['mountain',50,60,48]], m:[['cloud',30,22,18],['cloud',70,30,14]]},
+     how:'Tripod, one frame every 2 s for 10 min = 300 frames ≈ 12 s at 24 fps.', set:'manual exposure (AE lock) to stop flicker'},
+    {n:'pull-out reveal', mv:'pull', sky:'#ffcf8a,#7a9fd6', L:{b:[['mountain',35,58,40],['mountain',75,62,34]], m:[['stand',50,46,6,'pal']]},
+     how:'Start tight on a person, then back away (or drone up) to show the scale.', set:'drone: slow climb · phone: walk backward'},
+  ]],
+  ['🌃', 'night & neon', [
+    {n:'puddle reflection tilt', mv:'tilt', sky:'#120a2a,#2a1340',
+     L:{b:[['#0d1424',0,56,100,44]], m:[['sign',35,30,22],['sign',65,30,22],['sign',35,80,22,'flip'],['sign',65,80,22,'flip']]},
+     how:'Lens just above a puddle. Tilt up from the reflection to the real sign.', set:'expose for the neon'},
+    {n:'bokeh rack', mv:'rack', sky:'#150b2c,#3a1747', L:{b:[['stand',58,58,30,'pal']], f:[['bokeh',18,30,20],['bokeh',32,74,16],['bokeh',86,40,18]]},
+     how:'Shoot through string lights close to the lens, then rack focus to your subject.', set:'widest aperture or portrait video'},
+    {n:'orbit', mv:'orbit', sky:'#0e0a24,#241240', L:{b:[['city',10,52,30],['city',50,50,34],['city',90,52,30]], m:[['stand',50,62,30,'pal']]},
+     how:'Circle your subject at a constant distance. The background slides behind them.', set:'subject centered · gimbal'},
+  ]],
+  ['🌤️', 'light & weather', [
+    {n:'sun peek flare', mv:'reveal', sky:'#ffcf8a,#7a9fd6', L:{b:[['sun',62,30,24]], m:[['temple',50,58,40]], f:[['#1b120c',0,0,70,100]]},
+     how:'Hide the sun behind a pillar or building edge, then shift until it just peeks out. A controlled flare, not a blown-out frame.', set:'golden hour · lock exposure first'},
+    {n:'rain-on-glass rack', mv:'rack', sky:'#141a2a,#2a2f45', L:{b:[['lamp',40,44,30],['car',72,68,20,'taxi']], f:[['drop',20,30,12],['drop',55,22,10],['drop',80,52,14],['drop',35,72,10]]},
+     how:'Lens close to a wet café or taxi window. Start sharp on the drops, then rack to the street lights behind.', set:'tap to focus: drops, then street'},
+    {n:'night window reflection', mv:'window', sky:'#0b0f22,#1c1838',
+     L:{b:[['bust',32,54,40,'you ghost']], m:[['bokeh',10,40,10],['city',40,52,18],['bokeh',70,40,10],['city',100,52,18],['bokeh',130,40,10]]},
+     how:'On a night train or at a high window, sit so your faint reflection overlays the city lights. Keep your side of the glass dim.', set:'don’t cover the glass · expose for the lights'},
+    {n:'shadow walk', mv:'follow', sky:'#c9a878,#a8875a',
+     L:{b:[['#8a7a66',-20,0,240,100],['#6f6252',-10,60,3,40],['#6f6252',50,60,3,40],['#6f6252',110,60,3,40]], m:[['walk',42,62,30,'sil']]},
+     how:'Low sun behind you. Aim down at your long shadow on the pavement or a wall as you walk. A person without a face.', set:'early morning or late afternoon · Tilt Locked'},
+  ]],
+  ['🎙️', 'vlog & talking', [
+    {n:'selfie walk-and-talk', mv:'follow', sky:'#9ec5e8,#e8d6b8',
+     L:{b:[['#6d6a66',-20,72,240,28],['shop',-10,50,26],['tower',20,46,30],['shop',50,50,26],['tower',80,46,30],['shop',110,50,26],['tower',140,46,30]], m:[['bust',50,60,40,'you']]},
+     how:'Arm’s length, eyes on the upper third. Talk while you walk so the street moves behind you.', set:'0.5× · Action mode · clip-on mic'},
+    {n:'set-down talk', mv:'still', sky:'#86a9d6,#e9c9a0', L:{b:[['#6f7f58',0,70,100,30],['temple',75,48,26]], m:[['#5a3a22',0,84,100,16]], f:[['bust',33,60,36,'you'],['cup',58,86,10]]},
+     how:'Prop the phone on a table or ledge. Sit on one third, scenery in the rest. Best spot for a longer thought.', set:'eye level · 1× · under 60 s'},
+    {n:'jump-cut punch-in', mv:'jumpcut', sky:'#3b3f4a,#23262d', L:{m:[['bust',50,62,30,'you']], f:[['bust',50,66,52,'you']]},
+     how:'Talk in one take, cut out the pauses. Alternate normal and punched-in framing so the cuts look deliberate.', set:'shoot 4K · punch in 130–150% in edit'},
+    {n:'talk, then turn', mv:'whip', sky:'#1d2230,#2c3446', L:{m:[['#9ec5e8',0,0,100,100],['bust',50,60,40,'you']], f:[['#86a9d6',0,0,100,100],['temple',50,50,40]]},
+     how:'Say the line to camera, then swing the phone around to what you’re talking about. Same take, no cut.', set:'front lens the whole time'},
+    {n:'walk-in intro', mv:'approach', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28],['city',50,40,34]], f:[['stand',50,66,36,'you walk']]},
+     how:'Lock the phone off, walk from the background up to the lens, start talking when you arrive.', set:'AF lock on the end spot'},
+    {n:'voiceover on b-roll', mv:'push', sky:'#5a7fc4,#ffb37a', L:{b:[['mountain',50,52,44]], f:[['mic',86,78,12]]},
+     how:'Record the line as audio only and lay it over montage clips. You talk without stopping the visuals.', set:'quiet room · mic ~15 cm away'},
+  ]],
+  ['🧍', 'people & human moments', [
+    {n:'dolly zoom', mv:'dolly', sky:'#8a9fb5,#d8c7b0', L:{b:[['temple',50,42,30]], f:[['stand',50,64,30,'pal']]},
+     how:'Walk backward while zooming in, so the subject stays the same size and the background swells.', set:'needs a smooth zoom · practise first'},
+    {n:'silhouette', mv:'still', sky:'#ff9a4d,#ffd28a', L:{b:[['#2b1a12',0,80,100,20]], f:[['stand',50,58,34,'pal sil']]},
+     how:'Subject against a bright sky or window. Expose for the sky.', set:'golden hour · AE lock on the sky'},
+    {n:'over-the-shoulder', mv:'push', sky:'#9bb7dc,#e8d3b2', L:{b:[['temple',62,46,30]], f:[['back',14,86,72,'pald']]},
+     how:'Shoot past their shoulder toward what they are looking at. Gives the viewer their POV.', set:'cut to the wide right after'},
+    {n:'hands doing things', mv:'push', sky:'#3b2416,#1d120b', L:{m:[['ticket',58,48,16]], f:[['hand',42,62,30,'pal']]},
+     how:'Tight on hands paying, pouring, lighting incense, holding a ticket. A person without needing a face.', set:'2× · ~3 s · shoot lots'},
+    {n:'follow-me lead', mv:'push', sky:'#9bb7dc,#e8d3b2', L:{b:[['city',58,42,30]], f:[['lead',28,74,30,'pal']]},
+     how:'Your companion holds your hand and pulls you toward the next place. Your POV, their arm in frame.', set:'0.5× · walk smoothly'},
+    {n:'candid reaction', mv:'rack', sky:'#3a2318,#1a100a', L:{b:[['face',66,46,28,'pal']], f:[['skewer',24,62,32]]},
+     how:'First bite, first look at the view. Rack from the thing to their face, keep rolling past the moment.', set:'start early · hold 3 s after'},
+    {n:'local at work', mv:'still', sky:'#2a1a10,#120b06', L:{b:[['lantern',78,30,16]], m:[['chef',40,56,36]], f:[['steam',62,70,12]]},
+     how:'Chef at the grill, vendor, station staff. Ask first, then a 3–5 s portrait while they work.', set:'1× or 2× · don’t push the lens in faces'},
+    {n:'look, then see', mv:'eyeline', sky:'#1d2230,#2c3446', L:{m:[['#9bb7dc',0,0,100,100],['bust',40,60,44,'pal']], f:[['#86a9d6',0,0,100,100],['temple',55,50,40]]},
+     how:'Shot 1: your companion looking off-frame at something. Shot 2: what they see, filmed from where they stand. The cut tells the story.', set:'always shoot both halves'},
+    {n:'leading shot', mv:'lead', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28],['city',50,40,34]], m:[['stand',50,64,40,'pal walk']]},
+     how:'Walk backward a few steps ahead of your companion, facing them, as they walk toward you. Face and place in one shot.', set:'Follow mode · check behind you first'},
+    {n:'POV reach-in', mv:'reach', sky:'#2a2e35,#1a1d22', L:{m:[['ticket',55,48,18]], f:[['hand',50,62,30,'you']]},
+     how:'Camera at your eye line. Your own hand enters to take the ticket, slide the door, grab the can. The viewer becomes you.', set:'Pocket at chin height · 1×'},
+  ]],
+  ['🔭', 'shot sizes', [
+    {n:'extreme wide', mv:'still', sky:'#5a7fc4,#ffb37a', L:{b:[['mountain',30,46,30],['mountain',72,50,26],['#557a4a',0,70,100,30]], m:[['houses',60,74,10]], f:[['stand',40,80,4,'pal']]},
+     how:'The whole place, people tiny or absent. Tells the viewer where we are. First shot in a new city or valley.', set:'hold 3–5 s · deck, hill or bridge'},
+    {n:'wide', mv:'still', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28]], m:[['city',50,42,40]], f:[['stand',50,74,16,'pal']]},
+     how:'Head to toe with the surroundings. Shows who is here and where they stand.', set:'1× · subject on a third'},
+    {n:'medium', mv:'still', sky:'#9bb7dc,#e8d3b2', L:{b:[['city',72,40,30]], f:[['stand',38,84,80,'pal']]},
+     how:'Waist up. Shows what they are doing: ordering, walking, pointing.', set:'step in, don’t zoom'},
+    {n:'medium close-up', mv:'still', sky:'#9bb7dc,#e8d3b2', L:{b:[['city',78,40,24]], f:[['bust',38,68,60,'you']]},
+     how:'Chest up. The default framing for vlog talking.', set:'eyes on the upper third'},
+    {n:'close-up', mv:'still', sky:'#3a2318,#1a100a', L:{f:[['face',50,54,80,'pal']]},
+     how:'Face fills the frame. Reactions and emotion: the first bite, the view.', set:'2× from a step back'},
+    {n:'extreme close-up / detail', mv:'still', sky:'#3b2416,#1d120b', L:{f:[['dumpling',50,50,70]]},
+     how:'One small thing: eyes, a stamp, noodle texture, rain on a sign. Cut these between the bigger shots.', set:'Pocket focuses to ~20 cm · 2× for tighter'},
+  ]],
+  ['📐', 'angles & what they say', [
+    {n:'eye level', mv:'still', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,70,100,30],['temple',78,46,22]], f:[['stand',45,58,34,'pal']]},
+     how:'Lens at eye height. Neutral and honest. The default for talking and portraits.', set:'feels: relatable'},
+    {n:'low angle', mv:'still', sky:'#4f86c6,#bcd6ef', L:{b:[['#5d5a57',0,90,100,10]], m:[['tower',50,40,74]], f:[['stand',72,74,26,'pal']]},
+     how:'Camera at knee height or on the ground, aimed up. Buildings and people look tall and strong.', set:'feels: scale, power · skyscrapers'},
+    {n:'high angle', mv:'still', sky:'#6d6a66,#5d5a57', L:{b:[['#7a7672',0,0,100,100]], m:[['stand',50,64,8,'pal']]},
+     how:'Shoot down from stairs, a bridge or a deck. The subject looks small in a big place.', set:'feels: scale, solitude'},
+    {n:'bird’s-eye', mv:'still', sky:'#3e4148,#2c2f35', L:{b:[['#4a4d52',0,40,100,24]], m:[['umbrella',22,30,16,'c3'],['umbrella',48,62,16,'pal'],['umbrella',74,32,16],['umbrella',64,80,14,'c4'],['umbrella',30,78,14,'you']]},
+     how:'Straight down. Turns crowds, umbrellas, crossings and food into patterns.', set:'feels: graphic, map-like'},
+    {n:'dutch tilt', mv:'dutch', sky:'#150b2c,#3a1747', L:{b:[['#0d1424',0,70,100,30]], m:[['sign',30,36,20],['lamp',72,40,30]], f:[['walk',50,66,26]]},
+     how:'Roll the frame 10–20°. Energy or unease, good for night streets and fast cuts. Use rarely.', set:'FPV mode lets the roll through'},
+    {n:'hip level', mv:'follow', sky:'#a9c8e6,#d9c7ad',
+     L:{b:[['#6d6a66',-20,80,240,20],['shop',-10,42,34],['tower',20,36,38],['shop',50,42,34],['tower',80,36,38],['shop',110,42,34],['tower',140,36,38]], m:[['walk',40,64,40,'pal']]},
+     how:'Hold the camera at your waist while walking. You are in the crowd, not filming it, so people act normal.', set:'Tilt Locked keeps the horizon flat'},
+  ]],
+  ['🎥', 'Pocket 4 gimbal moves', [
+    {n:'Tilt Locked glide', mv:'push', sky:'#150b2c,#2a1340', L:{b:[['#0d1424',0,64,100,36]], m:[['lantern',25,30,14],['lantern',75,30,14],['lantern',38,44,10],['lantern',62,44,10]]},
+     how:'Walk forward through an alley or shopping arcade at a steady pace. The horizon stays flat however you step.', set:'Tilt Locked · heel-to-toe · 60 fps'},
+    {n:'ground skim', mv:'push', sky:'#9ec5e8,#d9c7ad', L:{b:[['city',50,30,30]], m:[['#5d5a57',0,46,100,54]], f:[['#e8e8e8',20,70,10,30],['#e8e8e8',45,70,10,30],['#e8e8e8',70,70,10,30]]},
+     how:'Camera a few cm above the pavement, gliding forward. Crossing stripes, tiles and puddles rush past.', set:'Tilt Locked · tilt up a touch'},
+    {n:'SpinShot sky-up', mv:'spin', sky:'#5a8fd0,#bcd6ef', L:{m:[['tower',32,28,40,'up1'],['tower',68,28,40,'up2'],['tower',32,72,40,'up3'],['tower',68,72,40,'up4']]},
+     how:'Point straight up between tall buildings or at a station ceiling and let it rotate 90° or 180°. A strong city opener.', set:'SpinShot mode · stand still'},
+    {n:'ActiveTrack walk-by', mv:'orbit', sky:'#9ec5e8,#e8d6b8', L:{b:[['shop',10,52,30],['tower',50,48,34],['shop',90,52,30]], m:[['stand',50,62,30,'pal']]},
+     how:'Double-tap your companion to lock on, then walk past or around them. The gimbal keeps them centered while the city slides.', set:'ActiveTrack · double-tap subject'},
+    {n:'Motionlapse', mv:'pan', sky:'#2a2a5a,#f0a070',
+     L:{b:[['#1a1d33',-20,74,140,26],['tower',-8,62,22],['city',20,60,26],['city',48,56,28],['tower',74,62,22],['city',100,60,26]]},
+     how:'On a ledge or mini tripod, set a start and end point. The gimbal pans slowly while it timelapses. Sunset into night.', set:'Motionlapse · 20–30 min'},
+  ]],
+  ['✂️', 'transitions', [
+    {n:'whip pan', mv:'whip', sky:'#1d2230,#2c3446', L:{m:[['#3b2416',0,0,100,100],['bowl',50,55,30]], f:[['#86a9d6',0,0,100,100],['temple',50,52,36]]},
+     how:'End one clip with a fast pan, start the next with a fast pan the same way. Cut mid-blur.', set:'1/50 or slower so the blur is real'},
+    {n:'match cut', mv:'match', sky:'#1d2230,#2c3446', L:{m:[['#ff9a4d',0,0,100,100],['sun',35,40,22]], f:[['#160c2c',0,0,100,100],['lantern',35,40,22]]},
+     how:'Same shape in the same spot of the frame across two places (sun → lantern, gate → gate).', set:'use the grid to place it'},
+    {n:'object wipe', mv:'wipe', sky:'#1d2230,#2c3446', L:{m:[['#9bb7dc',0,0,100,100],['gate',50,50,40]], f:[['#87b3e0',0,0,100,100],['tvtower',50,50,40]], x:[['#111',0,0,100,100]]},
+     how:'Pass something close across the lens (pole, person) at the end and start of two clips. Cut when it fills the frame.', set:'same direction both times'},
+  ]],
+  ['🎬', 'scene grammar', [
+    {n:'pillow shot', mv:'still', sky:'#1b2238,#0e1120', L:{b:[['#2a2622',0,74,100,26]], m:[['vending',72,48,30],['bike',32,70,26]]},
+     how:'An empty, quiet frame between scenes: a parked bike, laundry, a lantern, a vending machine at night. Yasujirō Ozu’s way of letting a film breathe.', set:'locked off · no people · 4–6 s'},
+    {n:'frame in, frame out', mv:'lockoff', sky:'#9ec5e8,#e8d6b8', L:{b:[['#6d6a66',0,74,100,26],['houses',50,50,30]], f:[['tram',50,70,40]]},
+     how:'Start on an empty frame, let a train, bike or person cross, keep rolling until it’s empty again. A clean in and out point for the edit.', set:'locked off · 2 s empty each end'},
+    {n:'walk-away exit', mv:'exit', sky:'#9bb7dc,#e8d3b2', L:{b:[['#8a7a66',0,72,100,28],['city',50,40,34]], f:[['stand',50,66,36,'pal walk']]},
+     how:'Locked off while you or your companion walk away down a path, platform or street until small. The natural last shot of a day.', set:'AE/AF lock · hold until they’re tiny'},
+    {n:'still in the rush', mv:'crowd', sky:'#a9c8e6,#d9c7ad', L:{b:[['#5d5a57',0,82,100,18],['tower',50,40,40],['stand',50,66,22,'you']], m:[['walk',35,66,22,'alt']], f:[['walk',60,70,36]]},
+     how:'Stand dead still in a busy crossing or station while a timelapse runs. You stay put, the crowd rushes around you.', set:'Timelapse mode · tripod · hold still 30 s+'},
+    {n:'escalator rise', mv:'rise', sky:'#4f86c6,#bcd6ef', L:{b:[['city',50,50,56],['#5d5a57',0,76,100,30]], m:[['walk',30,82,9],['walk',64,84,9,'pal']], f:[['#1d1f24',0,52,100,4],['#3a3d42',0,56,100,48]]},
+     how:'Ride a long escalator or glass elevator with the camera level. The rise reveals the street or atrium: a crane shot for free.', set:'Tilt Locked · stand still, let it carry you'},
+    {n:'sound-first clip', mv:'still', sky:'#3a2318,#1a100a', L:{m:[['bell',50,46,34]], f:[['speaker',82,78,12]]},
+     how:'Some clips are for their sound: a temple bell, train door chime, crossing beeper, sizzle. Stay quiet and get close for 5 s.', set:'no talking · wind cover outdoors'},
+  ]],
+  ['🎞️', 'shooting styles', [
+    {n:'Ozu stillness', mv:'still', sky:'#d8c7b0,#a89880', L:{b:[['#6f5a44',0,72,100,28]], m:[['temple',75,44,24]], f:[['sit',35,62,30,'pal'],['cup',55,82,10]]},
+     how:'Camera low, about seated height, and it never moves. People enter, talk and leave the frame. Suits temples, palaces, tea houses.', set:'tripod or set-down · 1× · no moves'},
+    {n:'observational', mv:'still', sky:'#9ec5e8,#e8d6b8', L:{b:[['#6d6a66',0,74,100,26],['shop',30,50,30],['shop',72,50,30]], m:[['chef',30,66,12],['walk',60,72,10],['cat',86,84,8]]},
+     how:'Film life from a distance without directing anyone: commuters, a shopkeeper, kids after school. The camera is a witness.', set:'2× from far back · long holds'},
+    {n:'long take', mv:'follow', sky:'#86a9d6,#e9c9a0',
+     L:{b:[['#7a6a5a',-20,72,240,28],['gate',-10,48,28],['lantern',20,42,18],['gate',50,48,28],['lantern',80,42,18],['gate',110,48,28],['lantern',140,42,18]], m:[['walk',42,70,22,'pal']]},
+     how:'One continuous shot with no cuts through a whole place: alley to temple, platform to train seat. Plan the route, rehearse once.', set:'Tilt Locked · 30–90 s · walk slow'},
+    {n:'planimetric', mv:'still', sky:'#f2c4b0,#e8d3b2', L:{b:[['#d9a38a',0,0,100,100],['#8a5a44',38,30,24,50]], f:[['stand',50,70,26,'pal']]},
+     how:'Camera square-on to a flat wall or shop front, subject centered, lines parallel to the frame. The Wes Anderson look.', set:'grid on · level · step back to stay flat'},
+  ]],
+];
+
+// ---- subject library ----
+// Every subject is drawn once as an SVG <symbol> (viewBox 0 0 100 100) and placed with <use>, in one flat style:
+// solid fills, a darker far side for depth, rounded limbs. People read their colors from CSS variables
+// (--p, --pd, --h, --hair), so one drawing serves strangers, "you" (.you, orange) and your companion (.pal, blue).
+const SPRITE = (() => {
+  const fill = f => f[0] === '-' ? `style="fill:var(${f})"` : `fill="${f}"`;
+  const op = o => o ? ` opacity="${o}"` : '';
+  const R = (x, y, w, h, f, rx = 0, o) => `<rect x="${x}" y="${y}" width="${w}" height="${h}"${rx ? ` rx="${rx}"` : ''} ${fill(f)}${op(o)}/>`;
+  const C = (x, y, r, f, o) => `<circle cx="${x}" cy="${y}" r="${r}" ${fill(f)}${op(o)}/>`;
+  const E = (x, y, rx, ry, f, o) => `<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" ${fill(f)}${op(o)}/>`;
+  const P = (d, f, o) => `<path d="${d}" ${fill(f)}${op(o)}/>`;
+  const S = (d, c, w, o) => `<path d="${d}" fill="none" ${c[0] === '-' ? `style="stroke:var(${c})"` : `stroke="${c}"`} stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${op(o)}/>`;
+  const ring = (x, y, r, c, w) => `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${c}" stroke-width="${w}"/>`;
+  const map = (n, f) => Array.from({length: n}, (_, i) => f(i)).join('');
+  // a curved East Asian eave roof (shared by temples, gates and pagodas across Japan, Korea and China)
+  const roof = (cx, y, w, h, f = '#34343c') =>
+    P(`M${cx - w / 2} ${y + h}Q${cx - w * .32} ${y + h * .7} ${cx - w * .3} ${y}H${cx + w * .3}Q${cx + w * .32} ${y + h * .7} ${cx + w / 2} ${y + h}L${cx + w * .4} ${y + h * 1.3}H${cx - w * .4}Z`, f);
+  // a window grid with a fixed scatter of lit windows
+  const win = (x, y, cols, rows, dx, dy, w, h, seed = 0) => map(rows * cols, i =>
+    R(x + (i % cols) * dx, y + Math.floor(i / cols) * dy, w, h, (i * 5 + seed * 3) % 7 < 3 ? '#f3c969' : '#5d6880'));
+  const sym = {
+    // people
+    walk: C(53, 11, 8, '--hair') + C(55, 14, 7.5, '--h') + S('M50 30L43 44L46 56', '--pd', 6) + S('M50 56L43 74L34 92', '--pd', 9)
+      + R(42, 24, 16, 35, '--p', 8) + S('M51 57L58 74L67 90', '--pd', 9) + S('M50 30L58 43L63 53', '--p', 6) + C(63.5, 55, 3.5, '--h'),
+    stand: C(50, 12.5, 9.5, '--hair') + C(50, 15, 8.5, '--h') + R(31, 27, 7, 31, '--pd', 3.5) + R(62, 27, 7, 31, '--pd', 3.5)
+      + C(34.5, 58, 3.5, '--h') + C(65.5, 58, 3.5, '--h') + R(40, 58, 9, 38, '--pd', 4.5) + R(51, 58, 9, 38, '--pd', 4.5) + R(37, 25, 26, 39, '--p', 11),
+    bust: P('M12 100C12 74 28 64 50 64C72 64 88 74 88 100Z', '--p') + R(43, 50, 14, 16, '--h', 5) + C(50, 39, 17, '--h')
+      + P('M32 42A18 18 0 0 1 68 42C64 37 58 33 50 33S36 37 32 42Z', '--hair'),
+    face: C(50, 56, 38, '--h') + P('M12 54A38 38 0 0 1 88 54C80 36 64 28 50 34C38 26 20 34 12 54Z', '--hair')
+      + S('M29 60Q35 53 41 60', '#2a2630', 4) + S('M59 60Q65 53 71 60', '#2a2630', 4) + P('M38 72Q50 86 62 72Z', '#8c3a32')
+      + C(27, 70, 6, '#e88a7a', .4) + C(73, 70, 6, '#e88a7a', .4),
+    sit: R(26, 64, 26, 8, '#5a4636', 3) + R(30, 72, 4, 24, '#5a4636') + R(44, 72, 4, 24, '#5a4636') + C(42, 18, 8.5, '--hair') + C(44, 21, 8, '--h')
+      + S('M40 34L40 60', '--p', 15) + S('M40 63H66', '--pd', 11) + S('M66 63L66 90', '--pd', 9) + S('M41 38L54 50L63 47', '--p', 6) + C(65, 46, 3.5, '--h'),
+    back: P('M0 100C0 68 22 58 50 58C78 58 100 68 100 100Z', '--p') + R(41, 48, 18, 14, '--h', 6) + C(50, 34, 21, '--hair') + E(29, 38, 3.5, 5, '--h'),
+    chef: P('M14 100C14 76 30 66 50 66C70 66 86 76 86 100Z', '--p') + P('M38 68H62V100H38Z', '#f2efe8') + R(44, 52, 12, 16, '--h', 5) + C(50, 42, 14, '--h')
+      + R(37, 20, 26, 14, '#f2efe8', 3) + C(40, 17, 8, '#f2efe8') + C(50, 12, 9, '#f2efe8') + C(60, 17, 8, '#f2efe8'),
+    hand: R(36, 76, 28, 26, '--p', 6) + R(31, 44, 36, 38, '--h', 15) + R(33, 20, 7.5, 32, '--h', 3.75) + R(41.5, 13, 7.5, 36, '--h', 3.75)
+      + R(50, 14, 7.5, 36, '--h', 3.75) + R(58.5, 21, 7, 30, '--h', 3.5) + S('M35 64L21 50', '--h', 8) + R(36, 74, 28, 5, '--pd', 2),
+    lead: S('M4 104L46 58', '--p', 20) + S('M44 60L54 50', '--h', 14) + S('M54 46L66 34M57 50L70 40M58 55L71 48M50 46L56 36', '--h', 6),
+    top: E(50, 54, 21, 11, '--p') + C(50, 52, 9, '--hair'),
+    // food & things on the table
+    bowl: P('M12 46H88C88 70 72 84 50 84C28 84 12 70 12 46Z', '#e8dcc6') + P('M15 57H85C84 60 83 62 81.5 65H18.5C17 62 16 60 15 57Z', '#c2412d')
+      + R(36, 82, 28, 6, '#cbbca2', 3) + E(50, 46, 38, 8, '#d9c9ab') + E(50, 47, 34, 6, '#a85d2a')
+      + S('M24 47Q30 43 36 47T48 47T60 47', '#f2d48a', 2.5) + E(66, 45, 8, 4.5, '#fff') + C(66, 45, 3, '#f3b13b') + C(32, 45, 2, '#7cb05a') + C(40, 49, 2, '#7cb05a'),
+    bowltop: C(50, 50, 44, '#e8dcc6') + C(50, 50, 40, '#c2412d') + C(50, 50, 36, '#a85d2a')
+      + S('M24 52Q30 44 36 52T48 52T60 52T72 52M28 62Q34 56 40 62T52 62T64 62', '#f2d48a', 3)
+      + E(38, 36, 9, 7, '#fff') + C(38, 36, 3.5, '#f3b13b') + R(58, 56, 13, 17, '#1f2a22', 2) + C(60, 38, 2.5, '#7cb05a') + C(66, 44, 2.5, '#7cb05a') + C(54, 34, 2.5, '#7cb05a'),
+    chop: S('M10 92L88 14', '#c9905a', 4.5) + S('M18 96L94 22', '#b57c48', 4.5),
+    steam: S('M34 92C24 76 44 66 34 48C26 34 40 24 36 8', '#fff', 5, .7) + S('M54 94C44 76 64 64 54 46C46 30 60 20 56 4', '#fff', 5, .55)
+      + S('M72 90C64 76 80 66 72 52', '#fff', 4.5, .45),
+    skewer: S('M16 92L84 8', '#c9a26a', 3) + C(36, 67, 11, '#a0522d') + C(50, 50, 11, '#d9a441') + C(64, 32, 11, '#a0522d')
+      + C(32, 63, 3, '#fff', .3) + C(46, 46, 3, '#fff', .3) + C(60, 28, 3, '#fff', .3),
+    dumpling: P('M8 70C10 36 34 22 50 22C66 22 90 36 92 70C70 78 30 78 8 70Z', '#f1e6d2') + P('M8 70C30 78 70 78 92 70C80 84 20 84 8 70Z', '#d8c4a0')
+      + S('M30 32Q35 42 31 52M42 25Q46 38 42 50M56 24Q56 38 58 50M68 30Q66 42 70 52', '#d8c7a8', 3),
+    bento: R(10, 26, 80, 56, '#7a1f1a', 8) + R(14, 30, 72, 48, '#2a1d18', 5) + R(17, 33, 32, 42, '#f4efe4', 3) + C(33, 48, 5, '#c2412d')
+      + R(52, 33, 31, 20, '#3c5a2c', 3) + R(52, 56, 31, 19, '#e2b64a', 3) + C(62, 65, 4.5, '#a0522d') + C(73, 65, 4.5, '#a0522d'),
+    cup: E(48, 88, 34, 5, '#cfc6b6') + P('M24 36H70V70C70 80 62 86 52 86H42C32 86 24 80 24 70Z', '#ece5d8') + R(24, 46, 46, 6, '#d95926')
+      + S('M70 46C84 46 84 68 70 68', '#ece5d8', 6) + E(47, 36, 23, 4, '#6b3f22'),
+    ticket: `<g transform="rotate(-8 50 50)">` + R(12, 30, 76, 40, '#f3eee4', 4) + R(12, 30, 16, 40, '#d95926', 4) + R(24, 30, 4, 40, '#d95926')
+      + `<path d="M30 33V67" stroke="#c9bfae" stroke-width="2" stroke-dasharray="3 3"/>` + R(36, 40, 40, 4, '#9a988f', 2) + R(36, 48, 30, 4, '#9a988f', 2) + R(36, 58, 22, 6, '#2b2a33', 2) + `</g>`,
+    mic: R(40, 10, 20, 42, '#fff', 10, .9) + S('M43 22H57M43 30H57', '#9a988f', 2) + S('M30 40Q30 64 50 64Q70 64 70 40M50 64V84M38 86H62', '#fff', 4, .85),
+    speaker: P('M20 40H34L52 24V76L34 60H20Z', '#fff', .9) + S('M62 38Q70 50 62 62', '#fff', 5, .8) + S('M72 28Q86 50 72 72', '#fff', 5, .55),
+    // street objects
+    lantern: S('M50 0V14', '#2b2a33', 2) + C(50, 48, 42, '#ff8a4c', .16) + E(50, 48, 30, 34, '#d6402b') + S('M22 38Q50 32 78 38M20 48Q50 44 80 48M22 58Q50 56 78 58', '#a32c1e', 2)
+      + E(39, 40, 6, 14, '#ff9a7a', .35) + R(40, 12, 20, 7, '#2b2a33', 2) + R(40, 80, 20, 7, '#2b2a33', 2) + S('M50 87V98', '#e3b04b', 3),
+    sign: R(26, 2, 48, 96, '#ff5fa2', 8, .15) + `<rect x="32" y="8" width="36" height="84" rx="4" fill="#1d1530" stroke="#ff5fa2" stroke-width="3"/>`
+      + R(40, 16, 20, 4, '#7ff3ff') + R(48, 12, 4, 16, '#7ff3ff') + R(41, 34, 18, 3, '#7ff3ff') + R(41, 34, 3, 14, '#7ff3ff') + R(56, 34, 3, 14, '#7ff3ff')
+      + R(41, 45, 18, 3, '#7ff3ff') + R(40, 58, 20, 3, '#ffe27a') + R(48.5, 54, 3, 22, '#ffe27a') + S('M42 76L48 68M58 76L52 68', '#ffe27a', 3),
+    lamp: P('M58 24L94 100H30Z', '#ffe7a8', .14) + C(64, 22, 14, '#ffd98a', .22) + R(24, 16, 5, 80, '#2b2f3a', 1) + S('M26.5 18Q28 8 48 10L62 14', '#2b2f3a', 4)
+      + P('M54 12H74L70 20H58Z', '#2b2f3a') + E(64, 21, 6, 2.5, '#fff1c4') + R(20, 94, 13, 6, '#2b2f3a', 2),
+    vending: R(16, 0, 68, 100, '#bfe4ff', 10, .12) + R(22, 4, 56, 92, '#e8edf4', 5) + R(68, 4, 10, 92, '#c3cbd8') + R(27, 9, 38, 48, '#183a5c', 2)
+      + map(15, i => R(29 + (i % 5) * 7, 13 + Math.floor(i / 5) * 15, 5, 9, ['#d6402b', '#f3c969', '#4f8bd6', '#7cb05a', '#f2efe8'][(i * 2 + Math.floor(i / 5)) % 5], 1.5))
+      + map(3, i => R(29, 24 + i * 15, 33, 1.5, '#8cff9a', 0, .8)) + R(27, 61, 38, 7, '#cfd8e6', 1) + R(70, 30, 4, 10, '#2b2f3a', 1) + R(30, 74, 32, 10, '#2b2f3a', 2),
+    bike: ring(24, 68, 17, '#1c1f26', 4) + ring(76, 68, 17, '#1c1f26', 4) + S('M24 68L42 42H66L76 68M42 42L50 68L66 42M24 68H50', '#c2412d', 4)
+      + S('M37 34H48', '#1c1f26', 5) + S('M42 42L40 34M66 42L64 30H72', '#1c1f26', 4) + R(70, 34, 16, 10, '#8a6a3a', 2),
+    bell: S('M50 0V12', '#4a3b28', 4) + R(42, 10, 16, 8, '#6f5530', 3) + P('M28 24C28 17 72 17 72 24L76 84H24Z', '#8a6a3a')
+      + S('M27 40H73M25 64H75', '#6f5530', 2) + map(6, i => C(36 + (i % 3) * 14, 28 + Math.floor(i / 3) * 6, 2, '#6f5530')) + R(20, 82, 60, 6, '#6f5530', 3) + C(50, 74, 5, '#b08a4f'),
+    umbrella: C(50, 50, 44, '--p') + C(38, 38, 20, '#fff', .1) + S('M50 6V94M6 50H94M19 19L81 81M81 19L19 81', '--pd', 2.5) + C(50, 50, 4, '--pd'),
+    drop: P('M50 8C50 8 78 44 78 62A28 28 0 0 1 22 62C22 44 50 8 50 8Z', '#cfe4ff', .55) + E(40, 62, 5, 9, '#fff', .6),
+    bokeh: C(50, 50, 44, '#ffd27a', .35) + ring(50, 50, 43, '#ffe7b0', 2) + C(50, 50, 30, '#ffe2a0', .22),
+    rock: P('M10 80C10 56 30 40 52 42C74 44 92 60 90 80Z', '#6a6560') + P('M52 42C74 44 92 60 90 80H60C66 66 62 52 52 42Z', '#57524d'),
+    cat: P('M30 96C26 70 36 52 50 52C64 52 74 70 70 96Z', '#2b2a33') + C(50, 40, 15, '#2b2a33') + P('M37 32L38 18L47 28ZM63 32L62 18L53 28Z', '#2b2a33')
+      + E(44, 40, 2.5, 3, '#f2d14b') + E(56, 40, 2.5, 3, '#f2d14b') + S('M68 90C88 88 90 70 80 62', '#2b2a33', 6),
+    // buildings (region-neutral: a shop, towers, a hall, a palace gate and a pagoda; the torii is for shrine tiles only)
+    shop: R(8, 20, 84, 78, '#e9e1d2') + R(8, 20, 84, 16, '#3d7d6a') + R(18, 25, 10, 6, '#fff', 1, .85) + R(32, 25, 20, 6, '#fff', 1, .85) + R(56, 25, 8, 6, '#fff', 1, .85)
+      + map(7, i => P(`M${8 + i * 12} 36h12v10a6 6 0 0 1-12 0Z`, i % 2 ? '#f4efe4' : '#d95926')) + R(14, 54, 44, 34, '#f6d58e') + R(18, 70, 10, 18, '#d29a4a')
+      + R(32, 66, 8, 22, '#c2412d', 1) + R(44, 72, 10, 16, '#7aa86a') + R(64, 54, 22, 44, '#3a2f28') + R(67, 58, 16, 16, '#f6d58e', 0, .8) + R(8, 94, 84, 4, '#b8ab96'),
+    tower: R(30, 8, 40, 92, '#3f4757') + R(52, 8, 18, 92, '#323947') + R(33, 4, 34, 6, '#2b3140', 1) + R(49, 0, 2, 5, '#2b3140') + win(34, 14, 5, 12, 6.4, 7, 4, 4),
+    city: R(4, 34, 16, 66, '#5b6680') + R(56, 16, 15, 84, '#5b6680') + R(80, 42, 16, 58, '#5b6680') + R(62.5, 4, 2, 12, '#5b6680')
+      + R(16, 46, 20, 54, '#3a4254') + R(34, 26, 22, 74, '#30374a') + R(68, 36, 18, 64, '#3a4254') + R(44, 12, 2.5, 14, '#30374a')
+      + win(20, 52, 3, 6, 5, 7, 3, 4, 1) + win(38, 32, 4, 9, 4.5, 7, 2.5, 4, 2) + win(71, 42, 3, 8, 5, 7, 3, 4, 3),
+    tvtower: P('M40 100L47.5 66H52.5L60 100Z', '#aeb6c4') + R(47.5, 8, 5, 62, '#cfd5df') + C(50, 70, 10, '#e06a5a') + C(46.5, 66.5, 3, '#fff', .4)
+      + E(50, 52, 8, 2.5, '#cfd5df') + C(50, 36, 7, '#e06a5a') + R(49, 0, 2, 9, '#cfd5df'),
+    houses: R(6, 56, 26, 40, '#d9cdb6') + P('M2 58L19 40L36 58Z', '#4a4f5c') + R(12, 66, 8, 8, '#f3c969') + R(36, 48, 30, 48, '#e6dccb') + P('M32 50L51 30L70 50Z', '#3d4250')
+      + R(44, 58, 10, 10, '#f3c969') + R(46, 78, 8, 18, '#5a4636') + R(70, 60, 26, 36, '#cfc2a8') + P('M66 62L83 46L100 62Z', '#4a4f5c') + R(78, 70, 8, 8, '#56607a'),
+    temple: R(4, 90, 92, 6, '#958a78') + R(8, 82, 84, 9, '#a99d89') + R(14, 52, 72, 30, '#efe4cf') + map(4, i => R([18, 34, 61, 77][i], 52, 5, 30, '#b8392a'))
+      + R(43, 62, 14, 20, '#5a2a1e') + R(12, 48, 76, 6, '#7a2a20') + roof(50, 26, 96, 20) + R(30, 22, 40, 5, '#2a2a31', 2),
+    gate: R(4, 56, 92, 38, '#b3a690') + S('M4 66H96M4 76H96M4 86H96', '#9e927c', 1.5) + P('M38 94V76A12 12 0 0 1 62 76V94Z', '#1d1a17')
+      + R(18, 38, 64, 18, '#b8392a') + map(3, i => R(27 + i * 17, 41, 12, 13, '#5a2a1e')) + R(14, 36, 72, 4, '#2f6b5a') + roof(50, 18, 94, 16) + R(32, 14, 36, 5, '#2a2a31', 2),
+    pagoda: S('M50 1V16', '#34343c', 3) + C(50, 6, 2.5, '#34343c') + map(4, i => R(50 - (50 + i * 12) * .24, 23 + i * 18, (50 + i * 12) * .48, 10, '#b8392a') + roof(50, 14 + i * 18, 50 + i * 12, 8))
+      + R(30, 86, 40, 4, '#b8392a') + R(14, 89, 72, 8, '#a99d89'),
+    torii: P('M4 16Q50 26 96 16L92 26Q50 32 8 26Z', '#2b2626') + R(12, 26, 76, 5, '#d1452b') + R(14, 40, 72, 6, '#d1452b') + R(46, 30, 8, 10, '#d1452b')
+      + R(22, 28, 8, 66, '#d1452b') + R(70, 28, 8, 66, '#d1452b') + R(20, 90, 12, 8, '#2b2626') + R(68, 90, 12, 8, '#2b2626'),
+    // transit
+    train: P('M2 36H64C84 36 98 52 98 66V72H2Z', '#eef1f5') + P('M2 44H68C78 44 85 48 88 54H2Z', '#26314a') + map(8, i => R(10 + i * 7.5, 44, 1.5, 10, '#eef1f5'))
+      + R(2, 60, 96, 4, '#2f6fd1') + R(2, 38, 58, 2, '#fff', 1, .7) + R(8, 72, 18, 6, '#2b2f3a', 3) + R(56, 72, 18, 6, '#2b2f3a', 3) + E(92, 64, 2.5, 2, '#fff6c8'),
+    tram: R(4, 32, 92, 42, '#ebe5d6', 6) + R(4, 58, 92, 7, '#3a8f5a') + map(6, i => R(10 + i * 14, 38, 10, 13, '#26314a', 2))
+      + S('M38 32L48 20L58 32M42 20H54', '#2b2f3a', 2) + R(12, 74, 16, 6, '#2b2f3a', 3) + R(72, 74, 16, 6, '#2b2f3a', 3),
+    car: P('M6 66C6 58 12 56 20 54L32 40C34 38 36 37 40 37H62C66 37 68 38 70 40L80 54C90 55 94 58 94 66V72H6Z', '--car')
+      + P('M35 52L42 42H52V52ZM56 42H64L72 52H56Z', '#26314a') + C(26, 72, 9, '#1c1f26') + C(74, 72, 9, '#1c1f26') + C(26, 72, 4, '#9aa3b2') + C(74, 72, 4, '#9aa3b2')
+      + E(92, 62, 3, 2.5, '#fff3c4') + R(6, 60, 4, 4, '#ff4d4d'),
+    // nature
+    mountain: P('M0 92L38 22Q50 8 62 24L100 92Z', '#4a5f86') + P('M52 12Q58 14 62 24L100 92H62Z', '#3e5176')
+      + P('M38 22Q50 8 62 24L68 34L60 30L54 38L46 30L38 36L32 33Z', '#eef2f7'),
+    tree: R(46, 78, 8, 18, '#5a4030') + P('M50 6L72 38H28Z', '#3d7556') + P('M50 24L78 58H22Z', '#356a4c') + P('M50 42L84 80H16Z', '#2f5e45'),
+    grass: S('M20 100Q22 70 14 44M44 100Q42 60 30 20M66 100Q68 72 82 52', '#3f6b3a', 4) + S('M30 100Q30 64 36 30M56 100Q58 66 66 36M80 100Q78 80 90 62', '#5a8a4a', 4)
+      + E(30, 20, 3, 6, '#c9b06a') + E(36, 30, 3, 6, '#c9b06a') + E(66, 36, 3, 6, '#c9b06a'),
+    cloud: P('M14 70C2 70 2 50 16 48C16 32 36 26 46 36C52 22 76 24 78 42C94 40 98 70 82 70Z', '#fff', .92),
+    sun: C(50, 50, 46, '#ffd27a', .18) + C(50, 50, 34, '#ffd27a', .3) + C(50, 50, 24, '#ffe9b5'),
+  };
+  return `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <filter id="mb" x="-30%" y="0" width="160%" height="100%"><feGaussianBlur stdDeviation="9 0"/></filter>
+    <filter id="mb2" x="-30%" y="0" width="160%" height="100%"><feGaussianBlur stdDeviation="16 0"/></filter>
+    ${Object.entries(sym).map(([k, v]) => `<symbol id="s-${k}" viewBox="0 0 100 100">${v}</symbol>`).join('')}</defs></svg>`;
+})();
+document.body.insertAdjacentHTML('afterbegin', SPRITE);
+// idle motion each subject carries by default (its own life while the camera does its move)
+const IDLE = {walk:'walk', stand:'breathe', sit:'breathe', bust:'talk', face:'breathe', chef:'work', cat:'breathe',
+  steam:'steam', lantern:'sway', sign:'flick', bokeh:'glow'};
+// moves drawn as two copies of each layer, one sharp and one pre-blurred, that crossfade
+const TWIN = {rack:'soft', whip:'smear'};
+const item = ([g, x, y, a, b = '']) => g.startsWith('#')
+  ? `<div class="rect" style="background:${g};left:${x}%;top:${y}%;width:${a}%;height:${b}%"></div>`
+  : `<svg class="it ${IDLE[g] || ''} ${b}" style="left:calc(${x}% - ${a / 2}cqw);top:calc(${y}% - ${a / 2}cqw);width:${a}cqw;height:${a}cqw"><use href="#s-${g}"/></svg>`;
+const layers = (L, twin) => ['b', 'm', 'f', 'x'].map(k => {
+  const h = (L[k] || []).map(item).join('');
+  return `<div class="L ${k}">${twin && h ? `<div class="k">${h}</div><div class="k ${twin}">${h}</div>` : h}</div>`;
+}).join('');
+
+const slug = t => t.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// readable move labels for the REC tag; unknown ids fall back to the raw id
+const MOVE = {topdown:'top-down', lockoff:'lock-off', hyper:'hyperlapse', rack:'rack focus', dolly:'dolly zoom', pass:'pass-by',
+  jumpcut:'jump cut', whip:'whip pan', match:'match cut', approach:'walk-in', spin:'spin', still:'static',
+  exit:'walk-away', rise:'pedestal', eyeline:'eyeline match', reach:'POV', lead:'leading'};
+const esc = t => t.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const frame = s => `<div class="vf m-${s.mv}" style="background:linear-gradient(${s.sky})" role="img" aria-label="${esc(s.n)}: ${MOVE[s.mv] || s.mv} demo">
+        <div class="s" aria-hidden="true">${layers(s.L, TWIN[s.mv])}</div><span class="tag" aria-hidden="true">${MOVE[s.mv] || s.mv}</span>
+      </div>`;
+
+// subject ideas: what to point the camera at. [icon, section, [[subject, note], ...]]
+const SUBJECTS = [
+  ['🏪', 'everyday street', [
+    ['vending machines', 'Glowing at night, and the can dropping out. Everywhere in Japan, common in Korea.'],
+    ['convenience store run', 'The door chime, the hot-drink shelf, steam at the counter: a konbini, a GS25, a FamilyMart.'],
+    ['crossing signals', 'The walk-signal chirp or countdown, and a crowd waiting at the curb.'],
+    ['station details', 'Platform lines, departure boards, a train door closing, a metro gate beeping.'],
+    ['bikes & scooters', 'Bikes in rows, a lone cyclist with an umbrella, e-scooters weaving through a lane.'],
+    ['tiny lanes', 'Power lines, potted plants and laundry overhead. Old lanes behind any main road.'],
+    ['signs in local script', 'Kanji, Hangul and Chinese characters on shop signs, menus and neon. Instantly says where you are.'],
+    ['street details', 'Manhole covers, delivery bikes, door curtains, red lanterns, a shop cat.'],
+  ]],
+  ['🍢', 'food in process', [
+    ['ticket machine to bowl', 'Press the button, hand over the ticket, the bowl lands on the counter.'],
+    ['street food cooking', 'Takoyaki flipping, tteokbokki stirred in a pan, jianbing spread on a griddle, skewers over charcoal.'],
+    ['food markets', 'A depachika hall, Gwangjang Market stalls, a breakfast street with dumplings.'],
+    ['steam', 'A bamboo steamer lid lifting, broth being poured, breath over a hot drink.'],
+    ['table grill', 'Korean BBQ or yakiniku: meat hitting the grill, scissors cutting, the lettuce wrap.'],
+    ['café culture', 'Latte art and dessert plating. Seoul and Shanghai cafés are built to be filmed.'],
+  ]],
+  ['⛩️', 'temples, palaces & tradition', [
+    ['water & incense', 'Hand washing at a shrine basin, incense smoke rising from a temple burner.'],
+    ['wishes & offerings', 'Fortunes tied to racks, wooden plaques, red ribbons, lanterns strung over a courtyard.'],
+    ['gates in a row', 'A torii tunnel, palace gates lined up, a moon gate in a classical garden.'],
+    ['traditional dress', 'Visitors in kimono or hanbok at a temple or palace: wide and from behind.'],
+    ['temple animals', 'Deer bowing for crackers, koi in a garden pond, a cat on temple steps.'],
+    ['morning sweep', 'Monks or staff sweeping a courtyard early, before the crowds.'],
+  ]],
+  ['❄️', 'December', [
+    ['winter illuminations', 'Christmas and year-end light displays on shopping streets and plazas.'],
+    ['year-end decor', 'Christmas markets, trees in malls, New Year decorations going up late in the month.'],
+    ['low winter sun', 'Long shadows by mid-afternoon, and blue hour from about 4:45 to 5:30 pm.'],
+    ['clear cold days', 'The clearest views of the year: a mountain from a train, a skyline from a tower.'],
+    ['bundled up', 'Coats and scarves, hands around hot drinks, a heater in a doorway.'],
+  ]],
+  ['🌃', 'cities', [
+    ['neon districts', 'Shinjuku, Euljiro alleys, Nanjing Road: from street level, then the same view from above.'],
+    ['towers framed', 'Tokyo Skytree, N Seoul Tower, the Oriental Pearl: between buildings or down a street.'],
+    ['old against new', 'A hanok roof, a shikumen lane or a temple roof with towers behind it.'],
+    ['river at night', 'The Han, the Huangpu, a canal: reflections, bridges, boats crossing.'],
+    ['elevated trains', 'Passing overhead, from below or from a footbridge.'],
+  ]],
+  ['🫶', 'people', [
+    ['companion\'s hands', 'Tickets, paying, picking up chopsticks, holding a map.'],
+    ['first reactions', 'The first bite, the first view.'],
+    ['makers at work', 'A chef at the counter, a vendor wrapping, a barista pouring.'],
+    ['in and out', 'The two of you entering and leaving each place. Doubles as transitions.'],
+    ['strangers, from afar', 'Commuters on a train, a crowd at a market: wide and not face-on. Japan and Korea are strict about filming faces; ask first anywhere.'],
+  ]],
+  ['⭐', 'one signature shot per city', [
+    ['Tokyo', 'Shibuya Crossing from above at night.'],
+    ['Kyoto', 'An empty Higashiyama or Gion lane just after sunrise.'],
+    ['Osaka', 'The Glico sign and canal reflections in Dotonbori.'],
+    ['Nara', 'Deer with the Todai-ji gate behind.'],
+    ['DisneySea', 'Mediterranean Harbor at dusk.'],
+    ['Seoul', 'Gyeongbokgung gate with the city behind it, or Bukchon hanok roofs looking down to the towers.'],
+    ['Shanghai', 'The Pudong skyline from the Bund at blue hour.'],
+    ['Suzhou', 'A canal boat passing under a stone bridge on Pingjiang Road.'],
+    ['Hangzhou', 'West Lake at dawn, mist over the water and a pagoda on the hill.'],
+    ['daily rule', 'One signature shot, one food process, one detail and one human moment each day.'],
+  ]],
+];
+
+// reference guides: [icon, section, h2 note, html]. Numbers come from ND_GUIDE.md; keep them in sync.
+// light rows: [light, swatch, stops label, stops for the bar, ND]; label rows: [factor, density, stops]
+const ND_LIGHT = [
+  ['Bright sun, beach or snow', '#fff6d8', '~10', 10, 'ND64–512', '512 (max)'],
+  ['Bright sun', '#ffe08a', '~9', 9, 'ND64–512', '512'],
+  ['Hazy sun, light clouds', '#efd29c', '~8', 8, 'ND64–512', '256'],
+  ['Overcast', '#b9c0c8', '~6–7', 6.5, 'ND64–512', '64–128'],
+  ['Heavy overcast, open shade', '#7f8896', '~5–6', 5.5, 'ND2–32 / ND64–512', '32 / 64'],
+  ['Golden hour', '#e8954f', '~3–4', 3.5, 'ND2–32', '8–16'],
+  ['Dusk, indoors, night', '#2c3a66', '0', 0, 'none', 'off'],
+];
+const ND_MARKS = [['2', 1], ['4', 2], ['8', 3], ['16', 4], ['32', 5], ['64', 6], ['128', 7], ['256', 8], ['512', 9]];
+const GUIDES = [
+  ['🕶️', 'ND filter guide', 'NEEWER variable ND · Pocket 4', `
+    <p class="nd-lead">Two NEEWER variable NDs: <b>ND2–32</b> (1–5 stops) and <b>ND64–512</b> (6–9 stops). Each mark on the ring is one stop. Settings stay locked at <b>f/2 · ISO 400 · 1/50 · 24 fps</b>, so the ring is your only exposure control.</p>
     <div class="nd">
       <div class="nd-card">
-        <h3>📍 on location</h3>
+        <h3>☀️ which filter, which mark</h3>
+        <div class="nd-tw"><table class="nd-t">
+          <thead><tr><th scope="col">Light</th><th scope="col">Stops</th><th scope="col">Filter</th><th scope="col">Mark</th></tr></thead>
+          <tbody>${ND_LIGHT.map(([l, c, s, n, f, m]) => `<tr><td><i class="sw" style="--sw:${c}" aria-hidden="true"></i>${l}</td>
+            <td>${s}<span class="bar" style="--s:${n}" aria-hidden="true"></span></td><td>${f}</td><td><b>${m}</b></td></tr>`).join('')}</tbody>
+        </table></div>
+        <p>Start here, then trust the histogram. Estimates can be off by about <b>one mark</b>.</p>
+      </div>
+      <div class="nd-card">
+        <h3>📊 dial it in with the histogram</h3>
         <ol class="nd-steps">
-          <li><span><b>Lock settings:</b> ISO 400, shutter 1/50, white balance fixed.</span></li>
           <li><span>Turn on the <b>histogram</b> (and zebras if available).</span></li>
-          <li><span>Put on the <b>starting ND</b> from the table.</span></li>
-          <li><span>Aim at the brightest thing you care about, usually the sky. If the histogram touches the right edge, or zebras show on the sky, go <b>one filter stronger</b>.</span></li>
-          <li><span>Between two filters, fine-tune with <b>shutter 1/40 to 1/100</b>. Motion blur still looks natural in that range.</span></li>
-          <li><span><b>Re-check</b> when the light changes (sun to shade, clouds moving in).</span></li>
+          <li><span>Aim at the brightest thing you care about, usually the sky.</span></li>
+          <li><span>Touching the right edge? Turn the ring <b>one mark stronger</b>. Big gap on the right? One mark weaker.</span></li>
+          <li><span>At the end of a filter's range, <b>swap filters</b>: past 32 → ND64–512 at 64; under 64 → ND2–32 at 32.</span></li>
+          <li><span>Still clipping at 512 (beach, snow): you are out of ND. Frame less sky and let shadows go darker.</span></li>
         </ol>
         <div class="nd-rule">
           <svg viewBox="0 0 76 40" aria-hidden="true" focusable="false">
@@ -109,49 +746,276 @@ document.getElementById('nd').innerHTML = `
             <path d="M2 38H74" stroke="rgba(255,255,255,.3)" stroke-width="1"/>
             <path d="M73 2V38" stroke="#ff4d4d" stroke-width="2" stroke-dasharray="3 2"/>
           </svg>
-          <span><b>D-Log rule:</b> keep the sky just under the right edge of the histogram and let shadows sit a little dark. The LUT lifts midtones back up, but clipped highlights cannot be recovered.</span>
+          <span><b>D-Log rule:</b> keep the sky just under the right edge and let shadows sit a little dark. The LUT lifts midtones back up, but clipped highlights cannot be recovered.</span>
         </div>
       </div>
       <div class="nd-card">
-        <h3>☀️ starting ND by light</h3>
+        <h3>🎚️ ring marks = stops</h3>
         <div class="nd-tw"><table class="nd-t">
-          <caption>f/2 · ISO 400 · 1/50</caption>
-          <thead><tr><th scope="col">Light</th><th scope="col">Stops to cut</th><th scope="col">ND</th></tr></thead>
-          <tbody>${ND_LIGHT.map(([l, c, s, n, nd]) => `<tr><td><i class="sw" style="--sw:${c}" aria-hidden="true"></i>${l}</td>
-            <td>${s}<span class="bar" style="--s:${n}" aria-hidden="true"></span></td><td><b>${nd}</b></td></tr>`).join('')}</tbody>
+          <thead><tr><th scope="col">Mark</th><th scope="col">Stops</th><th scope="col">Filter</th></tr></thead>
+          <tbody>${ND_MARKS.map(([m, s]) => `<tr><td><b>${m}</b></td>
+            <td>${s}<span class="bar" style="--s:${s}" aria-hidden="true"></span></td><td>${s <= 5 ? 'ND2–32' : 'ND64–512'}</td></tr>`).join('')}</tbody>
         </table></div>
-        <p>These come from the <b>sunny-16 rule</b> adjusted for f/2. Treat them as a start point; they can be off by about <b>one stop</b>.</p>
+        <p>The two filters meet at 32 → 64, so there is no gap. If a <b>dark X</b> shows near 512, turn back one mark until it goes away.</p>
       </div>
       <div class="nd-card">
-        <h3>🏷️ reading ND labels</h3>
-        <p class="nd-warn" role="note"><strong>⚠️ watch out</strong><q>ND2</q> means <b>1 stop</b>, but <q>ND 2.0</q> means <b>6.6 stops</b>.</p>
-        <div class="nd-tw"><table class="nd-t">
-          <caption>“ND” + factor = how many times darker · a decimal = optical density</caption>
-          <thead><tr><th scope="col">Factor label</th><th scope="col">Density label</th><th scope="col">Stops</th></tr></thead>
-          <tbody>${ND_LABELS.map(([f, d, s]) => `<tr${f === 'ND2' || f === 'ND100' ? ' class="hl"' : ''}><td><b>${f}</b></td><td>${d}</td>
-            <td>${s}<span class="bar" style="--s:${s}" aria-hidden="true"></span></td></tr>`).join('')}</tbody>
-        </table></div>
+        <h3>🎞️ last time: walk clip 2026-10-24<small>DJI_20261024164540_0004</small></h3>
+        <p>Overcast, about <b>1 stop overexposed</b>; the sky clipped to white. In that light use <b>ND64–512 at 128</b>, then check the histogram.</p>
       </div>
-      <div class="nd-card">
-        <h3>🎒 what to carry</h3>
-        <div class="nd-opts">
-          <div class="idea"><h3>2-stop-spaced set: ND16, ND64, ND256</h3><p>Shutter 1/40–1/100 covers the gap between filters.</p></div>
-          <div class="idea"><h3>or a variable ND (about 6–9 stops) + ND16</h3><p>The ND16 is for golden hour. Cheap variable NDs can show a dark X pattern or color cast at the strongest end.</p></div>
-        </div>
-      </div>
-      <div class="nd-card">
-        <h3>🎞️ worked example: walk clip 2026-10-24<small>DJI_20261024164540_0004</small></h3>
-        <dl class="nd-ex">
-          <dt>light</dt><dd>Overcast Seattle afternoon</dd>
-          <dt>settings</dt><dd>ISO 400, filter <b>“ND 2”</b></dd>
-          <dt>result</dt><dd>About <b>1 stop overexposed</b>; the sky clipped to pure white in 17–34% of the top third of bright frames.</dd>
+    </div>`],
+];
+
+// top-level tabs; every SHEET, SUBJECTS and GUIDES section must be listed in exactly one group
+const GROUPS = [
+  ['📍', 'Places', ['food', 'temples & architecture', 'street & city', 'skyscrapers & city', 'trains & transit', 'landscape']],
+  ['🌗', 'Light', ['night & neon', 'light & weather', 'shooting styles']],
+  ['🧍', 'People', ['vlog & talking', 'people & human moments']],
+  ['🎥', 'Camera', ['shot sizes', 'angles & what they say', 'Pocket 4 gimbal moves', 'ND filter guide']],
+  ['🎬', 'Story', ['transitions', 'scene grammar']],
+  ['💡', 'Subjects', SUBJECTS.map(([, t]) => t)],
+];
+const groupOf = Object.fromEntries(GROUPS.flatMap(([, g, ts], i) => ts.map(t => [slug(t), i])));
+document.getElementById('groups').innerHTML = GROUPS.map(([icon, g, ts], i) =>
+  `<button role="tab" id="g-${slug(g)}" aria-selected="false" data-i="${i}"><span aria-hidden="true">${icon}</span>${g}</button>`).join('');
+document.getElementById('toc').innerHTML = [...SHEET, ...SUBJECTS].map(([icon, title, shots]) =>
+  `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title} <small>${shots.length}</small></a></li>`).join('')
+  + GUIDES.map(([icon, title]) => `<li data-g="${groupOf[slug(title)]}"><a href="#${slug(title)}"><span aria-hidden="true">${icon}</span>${title}</a></li>`).join('');
+
+document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) => `
+  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${shots.length} shots</small></h2><div class="grid">${shots.map(s => `
+    <div class="tile">
+      ${frame(s)}
+      <h3>${s.n}</h3><p>${s.how}</p><span class="set">${s.set}</span>
+    </div>`).join('')}</div></section>`).join('') + SUBJECTS.map(([icon, title, ideas]) => `
+  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${ideas.length} ideas</small></h2>
+    <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('') + GUIDES.map(([icon, title, note, html]) => `
+  <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${note}</small></h2>${html}</section>`).join('');
+
+// pause off-screen animations
+const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), {rootMargin: '100px 0px'});
+document.querySelectorAll('.vf').forEach(v => { v.classList.add('off'); io.observe(v); });
+
+// reduced motion: tap a frame to play / pause it
+const rm = matchMedia('(prefers-reduced-motion: reduce)');
+document.addEventListener('click', e => {
+  const v = e.target.closest('.vf'); if (v && rm.matches) v.classList.toggle('play');
+});
+
+// ---- shot roulette ----
+// Rolls a shot whose parts fit together. A filmmaker picks in this order:
+// the shot's job in the edit (role) -> a subject that can do that job -> a move suited to both
+// -> the size the role calls for -> an angle the move allows.
+// role: [icon, name, why, sizes, weight]
+const ROLES = {
+  est:  ['🌅', 'establish',   'Opens a scene: shows where you are before anything else.', ['xw', 'w'], 3],
+  exp:  ['🚶', 'explore',     'Moves the viewer through the place. Get 2–3 of these per spot.', ['w', 'm'], 3],
+  hum:  ['🧍', 'human beat',  'Puts a person in the place, so it feels lived in, not toured.', ['m', 'mcu', 'cu'], 3],
+  det:  ['🔍', 'detail',      'The texture of the place. Cut it between the bigger shots.', ['cu', 'ecu'], 3],
+  talk: ['🎙️', 'vlog beat',   'A 5–15 s talking moment between montage runs.', ['mcu', 'm'], 1],
+  pil:  ['🍃', 'pillow shot', 'A quiet pause between scenes. No action needed.', ['w', 'm', 'cu'], 1],
+  tr:   ['✂️', 'transition',  'Gets you out of this place and into the next one.', ['w', 'm'], 1],
+  end:  ['🌙', 'closer',      'Ends the scene or the day.', ['xw', 'w'], 1],
+};
+const ORDER = ['est', 'exp', 'hum', 'det', 'talk', 'pil', 'tr', 'end']; // a scene, start to finish
+const SZ = {xw:'extreme wide', w:'wide', m:'medium', mcu:'medium close-up', cu:'close-up', ecu:'extreme close-up / detail'};
+const ANG = {E:'eye level', L:'low angle', H:'high angle', B:'bird’s-eye', D:'dutch tilt', W:'hip level'};
+// sizes that make sense for each kind of subject (you can't extreme-wide a manhole cover)
+const KSZ = {thing:'m cu ecu', food:'m cu ecu', hands:'cu ecu', face:'mcu cu', vista:'xw w', tower:'xw w', place:'xw w m',
+  crowd:'xw w m', transit:'w m cu', motion:'w m cu ecu', person:'w m mcu', animal:'w m cu', night:'xw w m', light:'xw w m'};
+const PEOPLE = new Set(['person', 'face', 'hands', 'animal']);
+// generic subject types: [name, kind, examples]. KIND below tags the trip-specific ideas so a roll can
+// suggest one from the Subjects tab as "on this trip".
+const GENERIC = [
+  ['a landscape', 'vista', 'mountains, a lake, the sea, fields from a train'],
+  ['a skyline', 'vista', 'towers from a deck, a city across a river'],
+  ['a tall building', 'tower', 'a skyscraper, a TV tower, a pagoda'],
+  ['a building or shop front', 'place', 'a convenience store, a temple or palace gate, a café, a noodle stall'],
+  ['a street or lane', 'place', 'an alley, a shopping arcade, a quiet residential street'],
+  ['a night street', 'night', 'neon signs, lanterns, lit-up shop windows'],
+  ['a crowd', 'crowd', 'a crossing, a station at rush hour, a market'],
+  ['a train or vehicle', 'transit', 'a train, a bus, a taxi, a ferry'],
+  ['a static object', 'thing', 'a vending machine, a lantern, a parked bike, a sign in local script'],
+  ['a moving object', 'motion', 'steam, a flag, a turning sign, water, laundry in the wind'],
+  ['a machine at work', 'motion', 'a ticket machine, a can dropping out, a departure board, a crossing signal'],
+  ['a texture or detail', 'thing', 'wood grain, a stamp, a manhole cover, rain on a sign'],
+  ['food', 'food', 'a bowl, a plate, a drink, a dessert'],
+  ['food being made', 'food', 'a cook at a grill, a pour, a flip, plating'],
+  ['light itself', 'light', 'a low sun, long shadows, a reflection, a flare'],
+  ['your companion', 'person', 'walking, looking, ordering, waiting'],
+  ['a face', 'face', 'a reaction, a laugh, a first bite'],
+  ['hands', 'hands', 'paying, pouring, holding a ticket, washing at a basin'],
+  ['a local at work', 'person', 'a chef, a vendor, station staff (ask first)'],
+  ['an animal', 'animal', 'a cat on a step, deer at a temple, birds, koi'],
+];
+// subject -> kind ('one signature shot per city' is left out: each of those already names its shot)
+const KIND = {'vending machines':'motion', 'convenience store run':'place', 'crossing signals':'motion',
+  'station details':'transit', 'bikes & scooters':'thing', 'tiny lanes':'place', 'signs in local script':'thing',
+  'street details':'thing', 'ticket machine to bowl':'food', 'street food cooking':'food', 'food markets':'food',
+  'steam':'motion', 'table grill':'food', 'café culture':'food', 'water & incense':'motion', 'wishes & offerings':'thing',
+  'gates in a row':'place', 'traditional dress':'person', 'temple animals':'animal', 'morning sweep':'person',
+  'winter illuminations':'night', 'year-end decor':'thing', 'low winter sun':'light', 'clear cold days':'vista',
+  'bundled up':'person', 'neon districts':'night', 'towers framed':'tower', 'old against new':'place',
+  'river at night':'night', 'elevated trains':'transit', 'companion\'s hands':'hands', 'first reactions':'face',
+  'makers at work':'person', 'in and out':'person', 'strangers, from afar':'crowd'};
+// move tile -> [roles, subject kinds it works on, angles it allows]
+const RECIPE = {
+  'overhead hands-in': ['det', 'food thing hands', 'B'],
+  'push-in on steam': ['det', 'food motion', 'E H'],
+  'rack focus': ['det', 'food thing motion night', 'E'],
+  'tilt-up reveal': ['est', 'place tower', 'L E'],
+  'foreground reveal': ['est', 'place vista tower', 'E'],
+  'symmetry lock-off': ['est pil', 'place transit', 'E'],
+  'follow walk': ['exp', 'place crowd person night', 'E W'],
+  'low-angle crowd': ['exp', 'crowd transit', 'L'],
+  'hyperlapse': ['est', 'place tower night crowd', 'E'],
+  'tower tilt-up': ['est', 'tower night', 'L'],
+  'corner reveal': ['est', 'place tower crowd night', 'E'],
+  'observation deck pan': ['est end', 'vista night tower', 'H'],
+  'crossing from above': ['est', 'crowd', 'B H'],
+  'light trails': ['est end', 'night', 'H'],
+  'frame in a frame': ['est pil', 'tower place vista', 'E L'],
+  'window parallax': ['exp tr', 'vista transit', 'E'],
+  'platform pass-by': ['exp tr', 'transit', 'E L'],
+  'detail cutaway': ['det', 'thing food transit motion', 'H E'],
+  'foreground slide': ['est', 'vista place', 'E L'],
+  'cloud timelapse': ['est pil', 'vista light', 'E L'],
+  'pull-out reveal': ['est end', 'person vista place', 'E H'],
+  'puddle reflection tilt': ['est pil', 'night place tower', 'L'],
+  'bokeh rack': ['hum', 'person face', 'E'],
+  'orbit': ['hum exp', 'person animal', 'E L'],
+  'sun peek flare': ['est pil', 'light place tower', 'L E'],
+  'rain-on-glass rack': ['pil', 'night place', 'E'],
+  'night window reflection': ['pil', 'night vista', 'E'],
+  'shadow walk': ['pil exp', 'light person', 'H'],
+  'selfie walk-and-talk': ['talk', 'place crowd night', 'E'],
+  'set-down talk': ['talk', 'place vista food', 'E'],
+  'talk, then turn': ['talk tr', 'place tower vista food animal night', 'E'],
+  'walk-in intro': ['talk est', 'place vista', 'E'],
+  'silhouette': ['hum end', 'person light', 'L E'],
+  'over-the-shoulder': ['hum exp', 'person vista place food tower', 'E'],
+  'hands doing things': ['det', 'hands food thing', 'H E'],
+  'follow-me lead': ['hum exp tr', 'person place crowd', 'E'],
+  'candid reaction': ['hum', 'face food animal', 'E'],
+  'local at work': ['hum', 'person food', 'E'],
+  'look, then see': ['hum', 'person vista place tower animal', 'E'],
+  'leading shot': ['hum exp', 'person place', 'E'],
+  'POV reach-in': ['det', 'hands thing motion food transit', 'E H'],
+  'Tilt Locked glide': ['exp', 'place night crowd', 'E W'],
+  'ground skim': ['exp tr', 'place crowd tower', 'L'],
+  'SpinShot sky-up': ['est tr', 'tower', 'L'],
+  'ActiveTrack walk-by': ['hum exp', 'person animal', 'E'],
+  'Motionlapse': ['est end', 'vista night light', 'H E'],
+  'whip pan': ['tr', 'place tower vista food crowd night transit person', 'E'],
+  'object wipe': ['tr', 'place crowd person', 'E'],
+  'pillow shot': ['pil', 'thing motion place night', 'E L'],
+  'frame in, frame out': ['tr pil', 'transit place crowd motion', 'E'],
+  'walk-away exit': ['end', 'person place transit', 'E'],
+  'still in the rush': ['hum est', 'crowd', 'E H'],
+  'escalator rise': ['est', 'place tower crowd', 'E'],
+  'sound-first clip': ['pil det', 'thing motion transit food place', 'E'],
+};
+const TILE = {};
+SHEET.forEach(([, sec, shots]) => shots.forEach(s => TILE[s.n] = {...s, sec}));
+const TRIP = SUBJECTS.flatMap(([, sec, ideas]) => ideas.map(([n]) => ({n, sec, k: KIND[n]}))).filter(s => s.k);
+const SUBJ = GENERIC.map(([n, k, t]) => ({n, k, t}));
+const MOVES = Object.entries(RECIPE).filter(([n]) => TILE[n]).map(([n, [r, k, a]]) => ({n, r: r.split(' '), k: k.split(' '), a: a.split(' ')}));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+// in a human or vlog beat the size frames the person, so a non-person subject becomes the backdrop
+const isBackdrop = (role, s) => (role === 'hum' || role === 'talk') && !PEOPLE.has(s.k);
+const sizesFor = (role, s) => isBackdrop(role, s) ? ROLES[role][3] : ROLES[role][3].filter(z => KSZ[s.k].split(' ').includes(z));
+const combos = (role, subj) => MOVES.filter(m => m.r.includes(role)).flatMap(m =>
+  (subj ? [subj] : SUBJ).filter(s => m.k.includes(s.k) && sizesFor(role, s).length).map(s => ({m, s})));
+const feels = n => (TILE[n]?.set.match(/feels: ([^·]+)/) || [, ''])[1].trim();
+const cap = t => t[0].toUpperCase() + t.slice(1);
+let last = null;
+
+function roll(role, subj, avoid) {
+  if (!role) { // weighted pick of a role
+    const bag = ORDER.flatMap(r => Array(ROLES[r][4]).fill(r));
+    role = pick(bag);
+  }
+  let cs = combos(role, subj);
+  if (avoid) cs = cs.filter(c => c.m.n !== avoid).length ? cs.filter(c => c.m.n !== avoid) : cs;
+  const {m, s} = pick(cs), [ricon, rname, why] = ROLES[role];
+  const backdrop = isBackdrop(role, s);
+  const tk = TRIP.filter(x => x.k === s.k), trip = tk.length ? pick(tk) : null;
+  const size = pick(sizesFor(role, s)), angle = pick(m.a), t = TILE[m.n];
+  const sz = SZ[size].replace(' / detail', '');
+  const head = backdrop ? (role === 'talk' ? `${sz} of you, ${s.n} behind` : `${sz} of your companion, ${s.n} around them`)
+                        : `${sz} of ${s.n}`;
+  last = {role, s, m: m.n};
+  document.getElementById('roll-out').innerHTML = `
+    <div class="roll-card">
+      ${frame(t)}
+      <div>
+        <p class="role">${ricon} ${rname}<small>${why}</small></p>
+        <h3>${cap(head)}, ${ANG[angle]}, ${t.n}</h3>
+        <dl>
+          <dt>subject</dt><dd><b>${s.n}</b>: ${s.t}</dd>
+          ${trip ? `<dt>this trip</dt><dd>${trip.n} <a href="#${slug(trip.sec)}">${trip.sec} ↗</a></dd>` : ''}
+          <dt>size</dt><dd><b>${SZ[size]}</b> <a href="#shot-sizes">sizes ↗</a></dd>
+          <dt>angle</dt><dd><b>${ANG[angle]}</b>${feels(ANG[angle]) ? ` · feels: ${feels(ANG[angle])}` : ''} <a href="#angles-and-what-they-say">angles ↗</a></dd>
+          <dt>move</dt><dd><b>${t.n}</b> <a href="#${slug(t.sec)}">${t.sec} ↗</a></dd>
         </dl>
-        <div class="nd-opts">
-          <div class="idea"><h3>if it was ND 2.0 (6.6 stops) at 1/50</h3><p>That is about one stop short of what this light needed. Use <b>ND128 (2.1)</b> or <b>ND256</b> next time, or <b>ND100 with shutter 1/100</b>.</p></div>
-          <div class="idea"><h3>if it was ND2 (1 stop)</h3><p>The shutter must have been much faster than 1/50 to land only 1 stop over. Use <b>ND64–ND128 at 1/50</b> instead.</p></div>
-        </div>
+        <p class="do">${t.how}</p><span class="set">${t.set}</span>
+        <div class="roll-btns"><button id="roll-again">🎲 Roll again</button><button class="alt" id="roll-next">➡️ Next shot, same subject</button></div>
       </div>
     </div>`;
+}
+// next shot: same subject, the next role in scene order that this subject can fill
+function next() {
+  const i = ORDER.indexOf(last.role);
+  for (let j = 1; j <= ORDER.length; j++) {
+    const r = ORDER[(i + j) % ORDER.length];
+    if (combos(r, last.s).length) return roll(r, last.s, last.m);
+  }
+}
+document.getElementById('roll').addEventListener('click', e => {
+  const id = e.target.closest('button')?.id;
+  if (id === 'roll-go' || id === 'roll-again') roll();
+  if (id === 'roll-next') next();
+});
+
+// show one group at a time: its tab, its chips, its sections
+let cur = -1;
+const showGroup = (i, scroll) => {
+  if (i === cur) return; cur = i;
+  document.querySelectorAll('#groups button').forEach(b => b.setAttribute('aria-selected', b.dataset.i == i));
+  document.querySelectorAll('#toc li, #sheet section').forEach(el => el.hidden = el.dataset.g != i);
+  links.forEach(l => l.removeAttribute('aria-current'));
+  const first = document.querySelector(`#sheet section[data-g="${i}"]`);
+  setActive(first.id);
+  if (scroll && document.querySelector('.toc').getBoundingClientRect().top <= 0) scrollTo({top: first.offsetTop - document.querySelector('.toc').offsetHeight - 12, behavior: 'auto'});
+};
+document.getElementById('groups').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  showGroup(+b.dataset.i, true);
+  history.replaceState(null, '', '#' + slug(GROUPS[b.dataset.i][1]));
+});
+const fromHash = () => {
+  const h = decodeURIComponent(location.hash.slice(1)), gi = GROUPS.findIndex(([, g]) => slug(g) === h);
+  if (gi >= 0) return showGroup(gi);
+  if (h in groupOf) { showGroup(groupOf[h]); document.getElementById(h).scrollIntoView(); return; }
+  showGroup(0);
+};
+addEventListener('hashchange', fromHash);
+
+// highlight the section in view and keep its chip visible in the nav
+const toc = document.querySelector('.toc ul'), links = new Map([...toc.querySelectorAll('a')].map(a => [a.hash.slice(1), a]));
+const setActive = id => {
+  const a = links.get(id); if (!a || a.hasAttribute('aria-current')) return;
+  links.forEach(l => l.removeAttribute('aria-current'));
+  a.setAttribute('aria-current', 'true');
+  const li = a.parentElement;
+  if (toc.scrollWidth > toc.clientWidth) toc.scrollTo({left: li.offsetLeft - (toc.clientWidth - li.offsetWidth) / 2, behavior: rm.matches ? 'auto' : 'smooth'});
+};
+const spy = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && setActive(e.target.id)), {rootMargin: '-30% 0px -65% 0px'});
+document.querySelectorAll('#sheet section').forEach(s => spy.observe(s));
+// the last sections are too short to reach the spy band, so the page bottom selects the last one
+addEventListener('scroll', () => {
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) setActive([...document.querySelectorAll('#sheet section:not([hidden])')].pop().id);
+}, {passive: true});
+fromHash();
 </script>
 </body>
 </html>
