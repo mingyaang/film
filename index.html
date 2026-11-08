@@ -297,7 +297,7 @@
   <h1>shot <span class="grad">cheat sheet</span> 🎬</h1>
   <p class="sub">camera moves for a travel montage. each frame loops the move; grid lines are the rule of thirds.</p>
   <details class="ndtop" id="nd-filter-guide">
-    <summary><div><b>🕶️ ND filter guide</b><span>NEEWER ND2–32 / ND64–512 · which mark for which light, and the histogram check</span></div><i aria-hidden="true">▼</i></summary>
+    <summary><div><b>🕶️ ND filter guide</b><span>NEEWER ND2–32 / ND64–512 · which mark for which light, and the zebra + histogram check</span></div><i aria-hidden="true">▼</i></summary>
     <div class="ndtop-body" id="nd-body"></div>
   </details>
   <div class="roll" id="roll">
@@ -748,14 +748,16 @@ const GUIDES = [
         <p>Start here, then trust the histogram. Estimates can be off by about <b>one mark</b>.</p>
       </div>
       <div class="nd-card">
-        <h3>📊 dial it in with the histogram</h3>
+        <h3>🦓 dial it in: zebras, then histogram<small>Overexposure Alert ON · exposure in M</small></h3>
         <ol class="nd-steps">
-          <li><span>Turn on the <b>histogram</b> (and zebras if available).</span></li>
-          <li><span>Aim at the brightest thing you care about, usually the sky.</span></li>
-          <li><span>Touching the right edge? Turn the ring <b>one mark stronger</b>. Big gap on the right? One mark weaker.</span></li>
+          <li><span>Turn on <b>Overexposure Alert</b> (the zebras) and the <b>histogram</b>. Keep exposure in <b>M</b>: in Auto the camera cancels out the ring.</span></li>
+          <li><span><b>Zebras on the sky, a face or a white wall?</b> Turn the ring stronger until they go.</span></li>
+          <li><span><b>Zebras only on the sun, a lamp or a glint on water?</b> Leave them. Those are pure white anyway.</span></li>
+          <li><span><b>No zebras?</b> Turn the ring weaker until they just flicker on the brightest thing you care about, then back off a hair. The histogram should end just short of the right edge.</span></li>
           <li><span>At the end of a filter's range, <b>swap filters</b>: past 32 → ND64–512 at 64; under 64 → ND2–32 at 32.</span></li>
           <li><span>Still clipping at 512 (beach, snow): you are out of ND. Frame less sky and let shadows go darker.</span></li>
         </ol>
+        <p>The Pocket's zebras only mark <b>clipped</b> pixels and have no % level, so skip the 70% skin and 95% highlight presets from other cameras.</p>
         <div class="nd-rule">
           <svg viewBox="0 0 76 40" aria-hidden="true" focusable="false">
             <path d="M2 38C10 36 14 30 20 26S30 30 36 22S46 8 52 12S62 30 66 36L68 38Z" fill="#86b6ef" opacity=".55"/>
