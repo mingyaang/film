@@ -278,6 +278,7 @@
            padding:6px 4px;border-bottom:1px solid var(--ring-2)}
   .nd-t td{padding:7px 4px;border-bottom:1px solid var(--ring);color:var(--ink-2);vertical-align:middle}
   .nd-t tr:last-child td{border-bottom:0}
+  .nd-t td small{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
   .nd-t td b{color:var(--ink);white-space:nowrap}
   .nd-t td:not(:first-child),.nd-t th:not(:first-child){white-space:nowrap}
   .nd-t .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px;vertical-align:0;background:var(--sw);
@@ -299,6 +300,10 @@
   <details class="ndtop" id="nd-filter-guide">
     <summary><div><b>🕶️ ND filter guide</b><span>NEEWER ND2–32 / ND64–512 · which mark for which light, and the zebra + histogram check</span></div><i aria-hidden="true">▼</i></summary>
     <div class="ndtop-body" id="nd-body"></div>
+  </details>
+  <details class="ndtop" id="wb-presets">
+    <summary><div><b>🌡 white balance presets</b><span>C1–C4 · coldest light → warmest · which slot for which place on the trip</span></div><i aria-hidden="true">▼</i></summary>
+    <div class="ndtop-body" id="wb-body"></div>
   </details>
   <div class="roll" id="roll">
     <div class="roll-bar">
@@ -734,6 +739,25 @@ const ND_LIGHT = [
   ['Dusk, indoors, night', '#2c3a66', '0', 0, 'none', 'off'],
 ];
 const ND_MARKS = [['2', 1], ['4', 2], ['8', 3], ['16', 4], ['32', 5], ['64', 6], ['128', 7], ['256', 8], ['512', 9]];
+// white balance slots: [slot, light, swatch, kelvin, use for]; places: [where, slot]
+const WB_SLOTS = [
+  ['C1', 'Blue, flat', '#a9c1e0', '6500 K', 'Overcast, rain, open shade, blue hour'],
+  ['C2', 'Sun', '#fff1c9', '5600 K', 'Daylight, golden hour, sunset, blue-white LED panels'],
+  ['C3', 'Cool white', '#e6ecef', '4000 K', 'Fluorescent tubes, white LEDs, neon streets, stations'],
+  ['C4', 'Warm', '#f2a65a', '3200 K', 'Bulbs, lanterns, lamps, restaurants, sodium street lights'],
+];
+const WB_PLACES = [
+  ['Fushimi Inari, Arashiyama, Nara deer park, West Lake by boat', 'C2'],
+  ['Tokyo Tower at sunset, any golden hour', 'C2'],
+  ['teamLab and other light shows (keep their colours)', 'C2'],
+  ['Malls, offices, konbini with blue-white LEDs', 'C2'],
+  ['Grey Shanghai and Hangzhou days, rain, temple courtyards in shade', 'C1'],
+  ['Hanfu shoot: C2 in sun, C1 in shade. Pick one for the whole shoot', 'C1 / C2'],
+  ['Dotonbori, Shibuya, Akihabara, the Bund at night, Myeongdong', 'C3'],
+  ['Metro, trains, stations, fluorescent or white-LED rooms', 'C3'],
+  ['Izakayas, KBBQ, Gong Yan banquet, hotel rooms with warm bulbs', 'C4'],
+  ['Lantern-lit Wuzhen, lamp-lit paths, orange sodium street lights', 'C4'],
+];
 const GUIDES = [
   ['🕶️', 'ND filter guide', 'NEEWER variable ND · Pocket 4', `
     <p class="nd-lead">Two NEEWER variable NDs: <b>ND2–32</b> (1–5 stops) and <b>ND64–512</b> (6–9 stops). Each mark on the ring is one stop. Settings stay locked at <b>f/2 · ISO 400 · 1/50 · 24 fps</b>, so the ring is your only exposure control.</p>
@@ -768,6 +792,12 @@ const GUIDES = [
         </div>
       </div>
       <div class="nd-card">
+        <h3>➡ why expose to the right<small>brighter in camera · darker in the grade</small></h3>
+        <p>Noise lives in the shadows. Shoot as bright as you can <b>without clipping</b>, then pull it down in the grade: the shadows come out cleaner and the grain finer. That is why the steps go weaker until zebras <b>just flicker</b>.</p>
+        <p><b>The right amount of zebra:</b> a few stripes on the sun, lamps or glints. Stripes on the sky, a face or a sign mean that detail is gone, so turn the ring one mark stronger.</p>
+        <p>Night and indoors: there is no ND to remove, so you cannot go further right. Shoot with no filter and let it sit darker.</p>
+      </div>
+      <div class="nd-card">
         <h3>🎚️ ring marks = stops</h3>
         <div class="nd-tw"><table class="nd-t">
           <thead><tr><th scope="col">Mark</th><th scope="col">Stops</th><th scope="col">Filter</th></tr></thead>
@@ -779,6 +809,46 @@ const GUIDES = [
       <div class="nd-card">
         <h3>🎞️ last time: walk clip 2026-10-24<small>DJI_20261024164540_0004</small></h3>
         <p>Overcast, about <b>1 stop overexposed</b>; the sky clipped to white. In that light use <b>ND64–512 at 128</b>, then check the histogram.</p>
+      </div>
+    </div>`],
+  ['🌡', 'white balance presets', 'C1–C4 custom modes · Pocket 4', `
+    <p class="nd-lead">One white balance per light type, saved in the four <b>custom mode</b> slots. The slots cannot be renamed, so they run <b>coldest light → warmest</b>: the higher the number, the warmer the light. Fixed presets keep every clip on known values, so post only needs one fix per slot.</p>
+    <div class="nd">
+      <div class="nd-card">
+        <h3>🎛 the four slots<small>tint 0 on all four · never auto</small></h3>
+        <div class="nd-tw"><table class="nd-t">
+          <thead><tr><th scope="col">Slot</th><th scope="col">Light</th><th scope="col">WB</th></tr></thead>
+          <tbody>${WB_SLOTS.map(([c, l, sw, k, use]) => `<tr><td><b>${c}</b></td>
+            <td style="white-space:normal"><i class="sw" style="--sw:${sw}" aria-hidden="true"></i>${l}<br><small>${use}</small></td><td><b>${k}</b></td></tr>`).join('')}</tbody>
+        </table></div>
+        <p>The Kelvin number goes <b>down</b> as the light gets warmer. Read the slots by the light you see, not the number.</p>
+      </div>
+      <div class="nd-card">
+        <h3>📍 which slot where<small>trip places → slot</small></h3>
+        <div class="nd-tw"><table class="nd-t">
+          <thead><tr><th scope="col">Place or light</th><th scope="col">Slot</th></tr></thead>
+          <tbody>${WB_PLACES.map(([w, c]) => `<tr><td style="white-space:normal">${w}</td><td><b>${c}</b></td></tr>`).join('')}</tbody>
+        </table></div>
+        <p><b>Unsure?</b> Outdoors in daylight: <b>C2</b>. Night or indoors: <b>C3</b>. Still looks blue on C3: <b>C2</b>.</p>
+      </div>
+      <div class="nd-card">
+        <h3>📏 rules</h3>
+        <ol class="nd-steps">
+          <li><span>Change slot only <b>between shots</b>, when the type of light changes. Never mid-shot.</span></li>
+          <li><span>After each change, film a <b>2-second grey card</b> (or plain white paper) in that light. Not a receipt or a phone screen.</span></li>
+          <li><span><b>Mixed light?</b> Balance for the light on your subject's face, not the background.</span></li>
+          <li><span>Leave tint at <b>0</b>. Fluorescent green comes out in post, one fix per light type.</span></li>
+          <li><span>Don't correct a look you want: golden hour stays orange, neon stays coloured.</span></li>
+        </ol>
+      </div>
+      <div class="nd-card">
+        <h3>💾 save the slots once<small>swipe down → Custom Mode → save</small></h3>
+        <ol class="nd-steps">
+          <li><span>Set <b>D-Log · 4K · 24 fps · ISO 400 · 1/50</b>, Color Recovery <b>on</b>, white balance manual at the slot's Kelvin.</span></li>
+          <li><span>Swipe down, tap <b>Custom Mode</b>, save to the slot. Repeat for all four, changing only white balance.</span></li>
+          <li><span>Set the Custom button to <b>Switch C1/C2</b>: it flips between shade and sun, the switch you'll make most in the day.</span></li>
+        </ol>
+        <p>Each slot saves <b>every</b> setting. Change something shared, like frame rate, and re-save all four.</p>
       </div>
     </div>`],
 ];
@@ -807,6 +877,7 @@ document.getElementById('sheet').innerHTML = SHEET.map(([icon, title, shots]) =>
   <section data-g="${groupOf[slug(title)]}" id="${slug(title)}" aria-labelledby="h-${slug(title)}"><h2 id="h-${slug(title)}"><i aria-hidden="true">${icon}</i>${title}<small>${ideas.length} ideas</small></h2>
     <div class="ideas">${ideas.map(([n, t]) => `<div class="idea"><h3>${n}</h3><p>${t}</p></div>`).join('')}</div></section>`).join('');
 document.getElementById('nd-body').innerHTML = GUIDES[0][3];
+document.getElementById('wb-body').innerHTML = GUIDES[1][3];
 
 // pause off-screen animations
 const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)), {rootMargin: '100px 0px'});
